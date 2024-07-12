@@ -4,8 +4,6 @@ var width = 2400;
 var height = 1200;
 canvas.width = width;
 canvas.height = height;
-let botaoUp = document.querySelector("#bo1");
-let botaoDown = document.querySelector("#bo2");
 
 
 //console.log(window.innerWidth)
@@ -26,7 +24,9 @@ let peixeMenu = {
     y:-100,
     w:224,
     h:128,
-    rotation:30
+    rotation:30,
+    accelX:3,
+    accelY:5
 }
 
 function carregarMenu(){
@@ -36,17 +36,31 @@ function carregarMenu(){
         ctx.drawImage(peixeImg, peixeMenu.sx, peixeMenu.sy, peixeMenu.sw, peixeMenu.sh, -peixeMenu.w/2, -peixeMenu.h/2, peixeMenu.w, peixeMenu.h);
         ctx.rotate(-1*(peixeMenu.rotation * Math.PI) / 180);
         ctx.translate((peixeMenu.x + peixeMenu.w/2)*-1, (peixeMenu.y + peixeMenu.h/2)*-1);
-        peixeMenu.x+=3;
-        peixeMenu.y+=5;
+        if(peixeMenu.accelX>0){
+            peixeMenu.accelX+=0.12;            
+        }
+        if(peixeMenu.accelY>0){
+            peixeMenu.accelY-=0.015;            
+            peixeMenu.y+=peixeMenu.accelY;
+        }
         if(peixeMenu.rotation>0){
             peixeMenu.rotation-=0.3;
         }
     }
+    else if(peixeMenu.accelX > -6){
+        peixeMenu.accelX-=0.5;       
+        ctx.drawImage(peixeImg, peixeMenu.sx, peixeMenu.sy, peixeMenu.sw, peixeMenu.sh, peixeMenu.x, peixeMenu.y, peixeMenu.w, peixeMenu.h);
+    }
+    else if(peixeMenu.accelX < 6){
+        peixeMenu.accelX+=0.5;
+        ctx.drawImage(peixeImg, peixeMenu.sx, peixeMenu.sy, peixeMenu.sw, peixeMenu.sh, peixeMenu.x, peixeMenu.y, peixeMenu.w, peixeMenu.h);
+    }
     else{
         ctx.drawImage(peixeImg, peixeMenu.sx, peixeMenu.sy, peixeMenu.sw, peixeMenu.sh, peixeMenu.x, peixeMenu.y, peixeMenu.w, peixeMenu.h);
     }
+    peixeMenu.x+=peixeMenu.accelX;
     peixeMenu.sx = 112*framePeixe;
-    console.log("X: " + peixeMenu.x + "\nY: " + peixeMenu.y + "\nRotação:" + peixeMenu.rotation * Math.PI + "º");
+    console.log("X: " + peixeMenu.accelX + "\nY: " + peixeMenu.accelY + "\nRotação:" + peixeMenu.rotation * Math.PI + "º");
 }
 
 //Background
@@ -96,10 +110,10 @@ function carregarChao (){
     for(var i=0; i<chao.length; i++){
         if(i+2%2 == 0){
             if(chao[i].x < -chao[i+1].w){
-                chao[i].x = chao[i+1].x+chao[i].w-chao[i].variacao+(nadar-10);
+                chao[i].x = chao[i+1].x+chao[i].w-chao[i].variacao;
             }
             else if(vidaStatus){
-                chao[i].x -= chao[i].variacao+(nadar-10);
+                chao[i].x -= chao[i].variacao;
             }
         }
         else{
@@ -107,17 +121,11 @@ function carregarChao (){
                 chao[i].x = chao[i-1].x+chao[i].w;
             }
             else if(vidaStatus){
-                chao[i].x -= chao[i].variacao+(nadar-10);
+                chao[i].x -= chao[i].variacao;
             }
         }
         ctx.drawImage(chao[i].img, 0, 0, chao[i].w, height, chao[i].x, 0, chao[i].w, height);
         if(i+2%2 == 1){
-            //ajustar o x do chao
-            if(chao[i].x - chao[i-1].x == 4800 || chao[i].x - chao[i-1].x == -4800){
-            }else{
-                chao[i-1].x -= (nadar-10);
-            }
-            console.log(chao[i].x - chao[i-1].x);
             ctx.fillStyle = "rgba(0,50,255,10%)";
             ctx.fillRect(background.x, background.y, background.w, background.h);
         }
@@ -326,7 +334,7 @@ function loop(){
         }
         else{
             gameOver();
-            console.log("GAME OVER");
+            console.log("GAME OVER")
         }
     }
     requestAnimationFrame(loop);
@@ -351,23 +359,15 @@ function loopMenu(){
     if(menu){
         requestAnimationFrame(loopMenu);
     }
-}loop();
+}
+loopMenu();
 
 //-----------------------------------------------------------------------------------------------//
-
-//tela
-
-var tela = false;
-function ajusteTela (){
-    if(screen.orientation.type == "portrait-primary" || screen.orientation.type == "portrait-secondary"){
-        screen.orientation.lock("landscape-primary");
-    }
-    canvas.requestFullscreen();
-}
 
 //colisão
 
 function colisao(){
+    canvas.requestFullscreen();
     for(var n = 0; n<numeroBarreiras; n++){
         //if((peixeHitbox.x+peixeHitbox.w >= barreiras[n].x)
         //&&(peixeHitbox.x <= barreiras[n].x+barreiras[n].w)
@@ -418,12 +418,6 @@ function movimento(){
     }
     else if(peixeHitbox.y+peixeHitbox.h<height){
         peixe.y += gravidade; 
-    }
-    if(keys.w.pressed || keys.s.pressed){
-        if(!tela){
-            ajusteTela();
-            tela = true;
-        }
     }
 }
 
@@ -486,15 +480,6 @@ window.addEventListener("keydown", (evt)=>{
     }
 });
 
-botaoUp.addEventListener("touchstart", (evt)=>{
-    keys.w.pressed = true;
-    keys.s.pressed = false;
-});
-botaoDown.addEventListener("touchstart", (evt)=>{
-    keys.s.pressed = true;
-    keys.w.pressed = false;
-});
-
 window.addEventListener("keyup", (evt)=>{
     if(evt.key){
         if(evt.key=="ArrowUp" || evt.key=='w'){
@@ -504,11 +489,4 @@ window.addEventListener("keyup", (evt)=>{
             keys.s.pressed = false;
         }
     }
-});
-
-botaoUp.addEventListener("touchend", (evt)=>{
-    keys.w.pressed = false;
-});
-botaoDown.addEventListener("touchend", (evt)=>{
-    keys.s.pressed = false;
 });
