@@ -351,20 +351,26 @@ function loopMenu(){
 
 function colisao(){
     for(var n = 0; n<numeroBarreiras; n++){
-        if((peixeHitbox.x+peixeHitbox.w >= barreiras[n].x)
-        &&(peixeHitbox.x <= barreiras[n].x+barreiras[n].w)
-        &&(peixeHitbox.y+peixeHitbox.h >= barreiras[n].y)
-        &&(peixeHitbox.y <= barreiras[n].y+barreiras[n].h)
-        &&(barreiras[n].h != 0 && barreiras[n].w != 0)
-        &&( ! bolhaStatus)){
-            tempobolha = Date.now();
-            frameCoracao += 2; 
-            au.play();
-            bolhaStatus = true;    
-            if(frameCoracao >= 6){
-                vidaStatus = false;
-            } 
-        }
+        //if((peixeHitbox.x+peixeHitbox.w >= barreiras[n].x)
+        //&&(peixeHitbox.x <= barreiras[n].x+barreiras[n].w)
+        //&&(peixeHitbox.y+peixeHitbox.h >= barreiras[n].y)
+        //&&(peixeHitbox.y <= barreiras[n].y+barreiras[n].h)
+        //&&(barreiras[n].h != 0 && barreiras[n].w != 0)
+        //&&( ! bolhaStatus)){
+        if(peixeHitbox.x+peixeHitbox.w < barreiras[n].x) continue;
+        if(peixeHitbox.x > barreiras[n].x+barreiras[n].w)continue
+        if(peixeHitbox.y+peixeHitbox.h < barreiras[n].y)continue
+        if(peixeHitbox.y > barreiras[n].y+barreiras[n].h)continue
+        if(barreiras[n].h == 0 || barreiras[n].w == 0)continue
+        if(bolhaStatus) continue
+        tempobolha = Date.now();
+        frameCoracao += 2; 
+        au.play();
+        bolhaStatus = true;    
+        if(frameCoracao >= 6){
+            vidaStatus = false;
+        } 
+        
     }
 }
 
