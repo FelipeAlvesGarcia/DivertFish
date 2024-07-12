@@ -4,6 +4,8 @@ var width = 2400;
 var height = 1200;
 canvas.width = width;
 canvas.height = height;
+let botaoUp = document.querySelector("#bo1");
+let botaoDown = document.querySelector("#bo2");
 
 
 //console.log(window.innerWidth)
@@ -478,6 +480,15 @@ window.addEventListener("keydown", (evt)=>{
     }
 });
 
+botaoUp.addEventListener("touchstart", (evt)=>{
+    keys.w.pressed = true;
+    keys.s.pressed = false;
+});
+botaoDown.addEventListener("touchstart", (evt)=>{
+    keys.s.pressed = true;
+    keys.w.pressed = false;
+});
+
 window.addEventListener("keyup", (evt)=>{
     if(evt.key){
         if(evt.key=="ArrowUp" || evt.key=='w'){
@@ -487,4 +498,11 @@ window.addEventListener("keyup", (evt)=>{
             keys.s.pressed = false;
         }
     }
+});
+
+botaoUp.addEventListener("touchend", (evt)=>{
+    keys.w.pressed = false;
+});
+botaoDown.addEventListener("touchend", (evt)=>{
+    keys.s.pressed = false;
 });
