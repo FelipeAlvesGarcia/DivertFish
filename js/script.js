@@ -96,10 +96,10 @@ function carregarChao (){
     for(var i=0; i<chao.length; i++){
         if(i+2%2 == 0){
             if(chao[i].x < -chao[i+1].w){
-                chao[i].x = chao[i+1].x+chao[i].w-chao[i].variacao;
+                chao[i].x = chao[i+1].x+chao[i].w-chao[i].variacao+(nadar-10);
             }
             else if(vidaStatus){
-                chao[i].x -= chao[i].variacao;
+                chao[i].x -= chao[i].variacao+(nadar-10);
             }
         }
         else{
@@ -107,11 +107,17 @@ function carregarChao (){
                 chao[i].x = chao[i-1].x+chao[i].w;
             }
             else if(vidaStatus){
-                chao[i].x -= chao[i].variacao;
+                chao[i].x -= chao[i].variacao+(nadar-10);
             }
         }
         ctx.drawImage(chao[i].img, 0, 0, chao[i].w, height, chao[i].x, 0, chao[i].w, height);
         if(i+2%2 == 1){
+            //ajustar o x do chao
+            if(chao[i].x - chao[i-1].x == 4800 || chao[i].x - chao[i-1].x == -4800){
+            }else{
+                chao[i-1].x -= (nadar-10);
+            }
+            console.log(chao[i].x - chao[i-1].x);
             ctx.fillStyle = "rgba(0,50,255,10%)";
             ctx.fillRect(background.x, background.y, background.w, background.h);
         }
@@ -320,7 +326,7 @@ function loop(){
         }
         else{
             gameOver();
-            console.log("GAME OVER")
+            console.log("GAME OVER");
         }
     }
     requestAnimationFrame(loop);
