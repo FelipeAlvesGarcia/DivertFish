@@ -347,13 +347,19 @@ function loopMenu(){
 
 //-----------------------------------------------------------------------------------------------//
 
+//tela
+
+var tela = false;
+function ajusteTela (){
+    if(screen.orientation.type == "portrait-primary" || screen.orientation.type == "portrait-secondary"){
+        screen.orientation.lock("landscape-primary");
+    }
+    canvas.requestFullscreen();
+}
+
 //colisão
 
-screen.orientation.lock("landscape-primary");
-
-
 function colisao(){
-    //canvas.requestFullscreen();
     for(var n = 0; n<numeroBarreiras; n++){
         //if((peixeHitbox.x+peixeHitbox.w >= barreiras[n].x)
         //&&(peixeHitbox.x <= barreiras[n].x+barreiras[n].w)
@@ -404,6 +410,12 @@ function movimento(){
     }
     else if(peixeHitbox.y+peixeHitbox.h<height){
         peixe.y += gravidade; 
+    }
+    if(keys.w.pressed || keys.s.pressed){
+        if(!tela){
+            ajusteTela();
+            tela = true;
+        }
     }
 }
 
