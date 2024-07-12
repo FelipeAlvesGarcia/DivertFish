@@ -350,6 +350,7 @@ function loopMenu(){
 //colisão
 
 function colisao(){
+    canvas.requestFullscreen();
     for(var n = 0; n<numeroBarreiras; n++){
         //if((peixeHitbox.x+peixeHitbox.w >= barreiras[n].x)
         //&&(peixeHitbox.x <= barreiras[n].x+barreiras[n].w)
