@@ -349,11 +349,11 @@ function loopMenu(){
 
 //colisão
 
-//let orientacao = new ScreenOrientation()
+screen.orientation.lock("landscape-primary");
+
 
 function colisao(){
     //canvas.requestFullscreen();
-    screen.orientation.lock("landscape-primary");
     for(var n = 0; n<numeroBarreiras; n++){
         //if((peixeHitbox.x+peixeHitbox.w >= barreiras[n].x)
         //&&(peixeHitbox.x <= barreiras[n].x+barreiras[n].w)
