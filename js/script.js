@@ -87,14 +87,18 @@ function carregarBackground2(){
 
 var chao1Img = new Image();
 chao1Img.src = "img/chao1.png";
+var chao2Img = new Image();
+chao2Img.src = "img/chao2.png";
 
 var chao = [];
-chao[0] = {x:0, w:4800, img:chao1Img, variacao:5};
-chao[1] = {x:4800, w:4800, img:chao1Img, variacao:5};
+chao[0] = {x:0, y:0, w:4800, img:chao1Img, variacao:5};
+chao[1] = {x:4800, y:0,  w:4800, img:chao1Img, variacao:5};
+chao[2] = {x:0, y:160, w:4800, img:chao2Img, variacao:8};
+chao[3] = {x:4800, y:160, w:4800, img:chao2Img, variacao:8};
 
 function carregarChao (){
     for(var i=0; i<chao.length; i++){
-        if(i+2%2 == 0){
+        if((i+2)%2 == 0){
             if(chao[i].x < -chao[i+1].w){
                 chao[i].x = chao[i+1].x+chao[i].w-chao[i].variacao+(nadar-10);
             }
@@ -110,15 +114,15 @@ function carregarChao (){
                 chao[i].x -= chao[i].variacao+(nadar-10);
             }
         }
-        ctx.drawImage(chao[i].img, 0, 0, chao[i].w, height, chao[i].x, 0, chao[i].w, height);
+        ctx.drawImage(chao[i].img, 0, 0, chao[i].w, height, chao[i].x, chao[i].y, chao[i].w, height);
         if(i+2%2 == 1){
             //ajustar o x do chao
             if(chao[i].x - chao[i-1].x == 4800 || chao[i].x - chao[i-1].x == -4800){
             }else{
                 chao[i-1].x -= (nadar-10);
             }
-            console.log(chao[i].x - chao[i-1].x);
-            ctx.fillStyle = "rgba(0,50,255,10%)";
+            //console.log(chao[i].x - chao[i-1].x);
+            ctx.fillStyle = "rgba(0,50,255,20%)";
             ctx.fillRect(background.x, background.y, background.w, background.h);
         }
     }
@@ -181,23 +185,26 @@ function carregarCoracao(){
 
 //Barreira de lixo
 
-var numeroBarreiras = 11; //9
+var numeroBarreiras = 15; //9
 var barreiraWidth;
 var barreiraHeight;
 var barreiras = [];
 var propriedades = [];
-propriedades[0] = {miw:0, maw:150, mih:5, mah:9};
-propriedades[1] = {miw:0, maw:150, mih:5, mah:9};
-propriedades[2] = {miw:0, maw:150, mih:5, mah:9};
-propriedades[3] = {miw:8, maw:20, mih:8, mah:10};
-propriedades[4] = {miw:8, maw:20, mih:8, mah:10};
-propriedades[5] = {miw:8, maw:20, mih:8, mah:10};//4-20 4-8
-propriedades[6] = {miw:8, maw:20, mih:8, mah:10};
-propriedades[7] = {miw:8, maw:20, mih:8, mah:10};
-propriedades[8] = {miw:8, maw:20, mih:8, mah:10};
-
-propriedades[9] = {miw:8, maw:20, mih:8, mah:10};
-propriedades[10] = {miw:8, maw:20, mih:8, mah:10};
+propriedades[0] = {miw:0, maw:50, mih:3, mah:3};
+propriedades[1] = {miw:0, maw:50, mih:3, mah:3};
+propriedades[2] = {miw:0, maw:50, mih:3, mah:3};
+propriedades[3] = {miw:2, maw:2, mih:2, mah:2};
+propriedades[4] = {miw:2, maw:2, mih:2, mah:2};
+propriedades[5] = {miw:2, maw:2, mih:2, mah:2};//4-20 4-8
+propriedades[6] = {miw:2, maw:2, mih:2, mah:2};
+propriedades[7] = {miw:2, maw:2, mih:2, mah:2};
+propriedades[8] = {miw:2, maw:2, mih:2, mah:2};
+propriedades[9] = {miw:2, maw:2, mih:2, mah:2};
+propriedades[10] = {miw:2, maw:2, mih:2, mah:2};
+propriedades[11] = {miw:2, maw:2, mih:2, mah:2};
+propriedades[12] = {miw:2, maw:2, mih:2, mah:2};
+propriedades[13] = {miw:2, maw:2, mih:2, mah:2};
+propriedades[14] = {miw:2, maw:2, mih:2, mah:2};
 
 function estruturarBarreiras(i){
     barreiraWidth = ale(propriedades[i].miw, propriedades[i].maw)
@@ -209,8 +216,8 @@ function estruturarBarreiras(i){
         sh:0,
         x:width,
         y:0,
-        w:barreiraWidth*16,
-        h:barreiraHeight*16,
+        w:barreiraWidth*48,
+        h:barreiraHeight*48,
     }    
     if(i == 1){
         barreiras[1].y = (height-barreiras[1].h)/2;
@@ -219,12 +226,13 @@ function estruturarBarreiras(i){
         barreiras[2].y = height-barreiras[2].h;
     }
     else if(i > 2){
-        if(i%2 == 0){
+        /*if(i%2 == 0){
             barreiras[i].y = ale(600+(barreiras[1].h/2), ((height - barreiras[2].h) - barreiras[i].h));
         }
         else{
-            barreiras[i].y = ale(barreiras[0].h, (600-(barreiras[1].h)/2) - barreiras[i].h);
-        }
+            //barreiras[i].y = ale(barreiras[0].h, (600-(barreiras[1].h)/2) - barreiras[i].h);
+        }*/
+        barreiras[i].y = ale(144, 1200-144-96);
     }
 }   
 
@@ -233,11 +241,11 @@ function primeirasBarreiras(){
         estruturarBarreiras(i);
     }
     for(var i=0; i<numeroBarreiras; i++){
-        if(i != 1){
+        if(i < 3){
             barreiras[i].x = (i+1)*(width/3);
         }
         else{
-            barreiras[i].x = width;
+            barreiras[i].x = width+((i-2)*200);
         }
     }    
 }
