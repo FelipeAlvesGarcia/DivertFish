@@ -1,7 +1,7 @@
 const canvas = document.querySelector("#tela");
-var ctx = canvas.getContext("2d");
-var width = 2400;
-var height = 1200;
+let ctx = canvas.getContext("2d");
+let width = 2400;
+let height = 1200;
 canvas.width = width;
 canvas.height = height;
 let botaoUp = document.querySelector("#bo1");
@@ -13,7 +13,25 @@ let botaoDown = document.querySelector("#bo2");
 
 //-----------------------------------------------------------------------------------------------//
 
-var au = document.querySelector("#audioDoeu");
+let comecou = false;
+botaoUp.addEventListener("click", ()=>{
+    if(!comecou){
+        comecou = true;
+        loopMenu();
+    }
+});
+
+//Audios
+
+let au = document.querySelector("#audioDoeu");
+let danoSom = document.querySelector("#dano");
+let musica1Som = document.querySelector("#musica1");
+let superPowerUpSom = document.querySelector("#superPowerUp");
+let powerUpSom = document.querySelector("#powerUp");
+let musicaAberturaSom = document.querySelector("#musicaAbertura");
+let moedaSom = document.querySelector("#moeda");
+let moeda2Som = document.querySelector("#moeda2");
+let gameOverSom = document.querySelector("#gameOver");
 
 //menu
 
@@ -51,7 +69,7 @@ function carregarMenu(){
 
 //Background
 
-var background = {
+let background = {
     sx:0,
     sy:0,
     sw:0,
@@ -73,7 +91,7 @@ function carregarBackground(){
     carregarChao();
 }
 
-var background2 = {
+let background2 = {
     sx:0,
     sy:0,
     sw:0,
@@ -90,19 +108,19 @@ function carregarBackground2(){
 
 //Chao
 
-var chao1Img = new Image();
+let chao1Img = new Image();
 chao1Img.src = "img/chao1.png";
-var chao2Img = new Image();
+let chao2Img = new Image();
 chao2Img.src = "img/chao2.png";
 
-var chao = [];
+let chao = [];
 chao[0] = {x:0, y:0, w:4800, img:chao1Img, variacao:5};
 chao[1] = {x:4800, y:0,  w:4800, img:chao1Img, variacao:5};
 chao[2] = {x:0, y:160, w:4800, img:chao2Img, variacao:8};
 chao[3] = {x:4800, y:160, w:4800, img:chao2Img, variacao:8};
 
 function carregarChao (){
-    for(var i=0; i<chao.length; i++){
+    for(let i=0; i<chao.length; i++){
         if((i+2)%2 == 0){
             if(chao[i].x < -chao[i+1].w){
                 chao[i].x = chao[i+1].x+chao[i].w-chao[i].variacao+(nadar-10);
@@ -135,11 +153,11 @@ function carregarChao (){
 
 //Peixe
 
-var peixeImg = new Image();
+let peixeImg = new Image();
 peixeImg.src = "img/peixe.png"
-var peixe;
-var peixeHitbox;
-var framePeixe = 0;
+let peixe;
+let peixeHitbox;
+let framePeixe = 0;
 
 peixe = {
     sx:0,
@@ -169,10 +187,10 @@ function carregarPeixe(){
 
 //Corações do peixe (vida)
 
-var frameCoracao = 0;
-var coracaoImg = new Image();
+let frameCoracao = 0;
+let coracaoImg = new Image();
 coracaoImg.src = "img/coracao.png";
-var coracao = {
+let coracao = {
     sx:0,
     sy:0,
     sw:160,
@@ -195,27 +213,27 @@ let lixosImg = new Image();
 lixosImg.src = "./img/lixosConjunto.png";
 let bolhasImg = new Image();
 bolhasImg.src = "./img/bolhas.png";
-var numeroBarreiras = 16; //9
-var barreiraWidth;
-var barreiraHeight;
-var barreiras = [];
-var propriedades = [];
-propriedades[0] = {miw:0, maw:50, mih:3, mah:3};
-propriedades[1] = {miw:0, maw:50, mih:3, mah:3};
-propriedades[2] = {miw:0, maw:50, mih:3, mah:3};
-propriedades[3] = {miw:2, maw:2, mih:2, mah:2};
-propriedades[4] = {miw:2, maw:2, mih:2, mah:2};
-propriedades[5] = {miw:2, maw:2, mih:2, mah:2};//4-20 4-8
-propriedades[6] = {miw:2, maw:2, mih:2, mah:2};
-propriedades[7] = {miw:2, maw:2, mih:2, mah:2};
-propriedades[8] = {miw:2, maw:2, mih:2, mah:2};
-propriedades[9] = {miw:2, maw:2, mih:2, mah:2};
-propriedades[10] = {miw:2, maw:2, mih:2, mah:2};
-propriedades[11] = {miw:2, maw:2, mih:2, mah:2};
-propriedades[12] = {miw:2, maw:2, mih:2, mah:2};
-propriedades[13] = {miw:2, maw:2, mih:2, mah:2};
-propriedades[14] = {miw:2, maw:2, mih:2, mah:2};
-propriedades[15] = {miw:3, maw:3, mih:5, mah:15};
+let numeroBarreiras = 16; //9
+let barreiraWidth;
+let barreiraHeight;
+let barreiras = [];
+let propriedades = [];
+propriedades[0] = {miw:0, maw:3, mih:3, mah:3, multh:1, multw:15};
+propriedades[1] = {miw:0, maw:3, mih:3, mah:3, multh:1, multw:15};
+propriedades[2] = {miw:0, maw:3, mih:3, mah:3, multh:1, multw:15};
+propriedades[3] = {miw:2, maw:2, mih:2, mah:2, multh:1, multw:1};
+propriedades[4] = {miw:2, maw:2, mih:2, mah:2, multh:1, multw:1};
+propriedades[5] = {miw:2, maw:2, mih:2, mah:2, multh:1, multw:1};//4-20 4-8
+propriedades[6] = {miw:2, maw:2, mih:2, mah:2, multh:1, multw:1};
+propriedades[7] = {miw:2, maw:2, mih:2, mah:2, multh:1, multw:1};
+propriedades[8] = {miw:2, maw:2, mih:2, mah:2, multh:1, multw:1};
+propriedades[9] = {miw:2, maw:2, mih:2, mah:2, multh:1, multw:1};
+propriedades[10] = {miw:2, maw:2, mih:2, mah:2, multh:1, multw:1};
+propriedades[11] = {miw:2, maw:2, mih:2, mah:2, multh:1, multw:1};
+propriedades[12] = {miw:2, maw:2, mih:2, mah:2, multh:1, multw:1};
+propriedades[13] = {miw:2, maw:2, mih:2, mah:2, multh:1, multw:1};
+propriedades[14] = {miw:2, maw:2, mih:2, mah:2, multh:1, multw:1};
+propriedades[15] = {miw:3, maw:3, mih:1, mah:5, multh:3, multw:1};
 
 function estruturarBarreiras(i){
     barreiraWidth = ale(propriedades[i].miw, propriedades[i].maw)
@@ -227,10 +245,11 @@ function estruturarBarreiras(i){
         sh:64,
         x:width,
         y:0,
-        w:barreiraWidth*48,
-        h:barreiraHeight*48,
+        w:barreiraWidth*48*propriedades[i].multw,
+        h:barreiraHeight*48*propriedades[i].multh,
         f:0
-    }    
+    }  
+
     /*if(i == 1){
         barreiras[1].y = (height-barreiras[1].h)/2;
     }
@@ -253,10 +272,10 @@ function estruturarBarreiras(i){
 }   
 
 function primeirasBarreiras(){
-    for(var i=0; i<numeroBarreiras; i++){
+    for(let i=0; i<numeroBarreiras; i++){
         estruturarBarreiras(i);
     }
-    for(var i=0; i<numeroBarreiras; i++){
+    for(let i=0; i<numeroBarreiras; i++){
         if(i < 3){
             barreiras[i].x = ((i+1)*(width/3))+width;
         }
@@ -271,7 +290,7 @@ function carregarBarreiras(){
     if(vidaStatus){
         atualizarBarreiras();
     }
-    for(var n=0; n<numeroBarreiras; n++){
+    for(let n=0; n<numeroBarreiras; n++){
         if(n>2 && n<15){
             ctx.globalAlpha = 0.6;
             ctx.drawImage(bolhasImg, 0, 0, 2000, 2000, barreiras[n].x-16, barreiras[n].y+16, barreiras[n].w, barreiras[n].h);
@@ -290,8 +309,8 @@ function carregarBarreiras(){
 
 //Pontos
 
-var quantidadePontos = 0;
-var pontos = {
+let quantidadePontos = 0;
+let pontos = {
     nx:16,
     ny:50,
     fonte:"49px serif",
@@ -304,10 +323,10 @@ function carregarPontos(){
 
 //Bolha
 
-var bolhaImg = new Image();
+let bolhaImg = new Image();
 bolhaImg.src = "img/bolha.png";
-var bolhaStatus = false;
-var bolha;
+let bolhaStatus = false;
+let bolha;
 function carregarBolha(){
     bolha = {
         sx:0,
@@ -327,12 +346,56 @@ function carregarBolha(){
         ctx.globalAlpha = 1;
     }
 }
+
+//Power Up
+
+let framePowerUp = 0;
+let powerUpImg = new Image();
+powerUpImg.src = "img/powerUp.png";
+let powerUps = {
+    sx:64,
+    sy:0,
+    sw:64,
+    sh:64,
+    x:-width,
+    y:0,
+    w:48,
+    h:48,
+    tipo:ale(0, 5)
+}
+function carregarPowerUp (){
+    powerUps.sx = 64 * framePowerUp;
+    ctx.fillStyle = "rgba(0,255,0,80%)";
+    //ctx.fillRect(powerUps.x, powerUps.y, powerUps.w, powerUps.h);
+    ctx.drawImage(powerUpImg, powerUps.sx, powerUps.sy, powerUps.sw, powerUps.sh, powerUps.x, powerUps.y, powerUps.w, powerUps.h);
+}
+
+//Moeda
+let numeroMoeda = 0;
+let moeda = [];
+moeda[0] = {sx:64, sy:0, w:64, h:64, x:width*(4/3), y:-200, w:48, h:48}
+moeda[1] = {sx:64, sy:0, w:64, h:64, x:width*(5/3), y:-200, w:48, h:48}
+moeda[2] = {sx:64, sy:0, w:64, h:64, x:width*(6/3), y:-200, w:48, h:48}
+
+function carregarMoeda (){
+    for(let i=0; i<moeda.length; i++){
+        ctx.fillStyle = "rgba(255,255,0,80%)";
+        ctx.fillRect(moeda[i].x, moeda[i].y, moeda[i].w, moeda[i].h); 
+    }
+}
+
 //-----------------------------------------------------------------------------------------------//
 
-var tempo = Date.now();
-var tempobolha = Date.now();
-var vidaStatus = true;
-var frame = 0;
+let tempo = Date.now();
+let tempobolha = Date.now();
+
+let tempoDobroPonto;
+let tempoDobroVelocidade;
+let dobroPonto = false;
+let dobroVelocidade = false;
+
+let vidaStatus = true;
+let frame = 0;
 function loop(){
     if(Date.now() - tempo >= (1000/60)){
         if(vidaStatus){
@@ -343,15 +406,42 @@ function loop(){
                 if(framePeixe == 7){
                     framePeixe = 0;
                 }
+
+                framePowerUp++;
+                if(framePowerUp == 6){
+                    framePowerUp = 0;
+                }
             }
+            musica1Som.play();
+
+            if(dobroPonto){
+                if(Date.now() - tempoDobroPonto >= 5000){
+                    dobroPonto = false;
+                }
+            }
+            if(dobroVelocidade){
+                if(Date.now() - tempoDobroVelocidade >= 5000){
+                    dobroVelocidade = false;
+                }
+            }
+
             carregarBackground();
             carregarPeixe();
             carregarBolha();
             movimento();
             carregarBarreiras();
-            colisao();
+            colisao(peixeHitbox.x, peixeHitbox.y, peixeHitbox.w, peixeHitbox.h, 0);
             carregarBackground2();
-            quantidadePontos += velocidade/40;   
+            quantidadePontos += velocidade/40; 
+            if(dobroPonto){
+                quantidadePontos += velocidade/40;   
+            }  
+            alocarPowerUp();
+            carregarPowerUp();
+            alocarMoeda();
+            carregarMoeda();
+            colisaoPowerUp(peixeHitbox.x, peixeHitbox.y, peixeHitbox.w, peixeHitbox.h);
+            colisaoMoeda(peixeHitbox.x, peixeHitbox.y, peixeHitbox.w, peixeHitbox.h);
             carregarPontos();
             carregarCoracao();
             niveis();
@@ -370,7 +460,9 @@ function loop(){
 
 let menu = true;
 function loopMenu(){
-    if(Date.now() - tempo >= (1000/60)){
+    if(Date.now() - tempo >= (1000/60) && menu){
+        musicaAberturaSom.play();
+
         frame++;
         if(frame == 3){
             frame = 0;
@@ -387,13 +479,78 @@ function loopMenu(){
     if(menu){
         requestAnimationFrame(loopMenu);
     }
-}loop();
+}
 
 //-----------------------------------------------------------------------------------------------//
 
+//Moedas
+
+function alocarMoeda (){
+    for(let i=0; i<moeda.length; i++){
+        if(moeda[i].x < -200){
+            moeda[i].x = width;
+            let espacoLivre;
+            do{
+                espacoLivre = true;
+                moeda[i].y = ale(0, 1200 - moeda[i].h);
+                if(!colisao(moeda[i].x, moeda[i].y, moeda[i].w, moeda[i].h, 1)){
+                    espacoLivre = false;
+                }
+            }while(!espacoLivre);
+        }    
+        moeda[i].x -= velocidade;
+    }
+}
+
+function colisaoMoeda(x, y, w, h){
+    for(let i=0; i<moeda.length; i++){
+        if((x + w >= moeda[i].x)
+            &&(x <= moeda[i].x + moeda[i].w)
+            &&(y + h >= moeda[i].y)
+            &&(y <= moeda[i].y + moeda[i].h)){
+            let som = ale(0, 1);
+            if(som == 0){
+                moedaSom.play();
+            }
+            else{
+                moeda2Som.play();
+            }
+            moeda[i].y = -200;
+            numeroMoeda++;
+            console.log("MOEDAS = "+numeroMoeda);
+        }
+    }
+}
+
+//Power Up
+
+let minTempoPower = 100;
+let maxTempoPower = 200;
+let tempoPowerPassado = ale(minTempoPower, maxTempoPower);
+let tempoPower = tempoPowerPassado + quantidadePontos;
+function alocarPowerUp (){
+    powerUps.x -= velocidade;
+    if(tempoPower <= quantidadePontos){
+        console.log("Power Up!");
+        tempoPowerPassado = (maxTempoPower-tempoPowerPassado) + ale(minTempoPower, maxTempoPower);
+        tempoPower = tempoPowerPassado + quantidadePontos;
+        powerUps.tipo = ale(0, 5);
+        powerUps.x = width;
+        let espacoLivre;
+        do{
+            espacoLivre = true;
+            powerUps.y = ale(0, 1200 - powerUps.h);
+            if(!colisao(powerUps.x, powerUps.y, powerUps.w, powerUps.h, 1)){
+                console.log("repete")
+                espacoLivre = false;
+            }
+        }while(!espacoLivre);
+    }
+}
+
 //tela
 
-var tela = false;
+let tela = false;
 function ajusteTela (){
     if(screen.orientation.type == "portrait-primary" || screen.orientation.type == "portrait-secondary"){
         screen.orientation.lock("landscape-primary");
@@ -401,37 +558,89 @@ function ajusteTela (){
     canvas.requestFullscreen();
 }
 
-//colisão
+//colisão com powerUp
 
-function colisao(){
-    for(var n = 0; n<numeroBarreiras; n++){
+function colisaoPowerUp(x, y, w, h){
+    if((x + w >= powerUps.x)
+    &&(x <= powerUps.x + powerUps.w)
+    &&(y + h >= powerUps.y)
+    &&(y <= powerUps.y + powerUps.h)){
+        console.log(powerUps.tipo)
+        powerUps.x -= width;
+        if(powerUps.tipo == 0){
+            powerUpSom.play();
+            if(frameCoracao > 0)
+                frameCoracao--;
+        }
+        else if(powerUps.tipo == 1){
+            powerUpSom.play();
+            tempobolha = Date.now();
+            bolhaStatus = true;    
+        }
+        else if(powerUps.tipo == 2){
+            powerUpSom.play();
+            tempoDobroPonto = Date.now();
+            dobroPonto = true;
+        }
+        else if(powerUps.tipo == 3){
+            powerUpSom.play();
+            tempoDobroVelocidade = Date.now();
+            dobroVelocidade = true;
+        }
+        else if(powerUps.tipo == 4){
+            superPowerUpSom.play();
+            frameCoracao = 0;
+        }
+        else if(powerUps.tipo == 5){
+            superPowerUpSom.play();
+            for(let i=0; i<barreiras.length; i++){
+                barreiras[i].y = -height;
+            }
+        }
+    }
+}
+
+//colisão com barreira
+
+function colisao(x, y, w, h, tipo){
+    let testeColisao = true;
+    for(let n = 0; n<numeroBarreiras; n++){
         //if((peixeHitbox.x+peixeHitbox.w >= barreiras[n].x)
         //&&(peixeHitbox.x <= barreiras[n].x+barreiras[n].w)
         //&&(peixeHitbox.y+peixeHitbox.h >= barreiras[n].y)
         //&&(peixeHitbox.y <= barreiras[n].y+barreiras[n].h)
         //&&(barreiras[n].h != 0 && barreiras[n].w != 0)
         //&&( ! bolhaStatus)){
-        if(peixeHitbox.x+peixeHitbox.w < barreiras[n].x+8) continue;
-        if(peixeHitbox.x > barreiras[n].x+barreiras[n].w-16)continue
-        if(peixeHitbox.y+peixeHitbox.h < barreiras[n].y+8)continue
-        if(peixeHitbox.y > barreiras[n].y+barreiras[n].h-16)continue
+        if(x + w < barreiras[n].x+8) continue;
+        if(x > barreiras[n].x+8 + barreiras[n].w-16)continue
+        if(y + h < barreiras[n].y+8)continue
+        if(y > barreiras[n].y+8 + barreiras[n].h-16)continue
         if(barreiras[n].h == 0 || barreiras[n].w == 0)continue
         if(bolhaStatus) continue
-        tempobolha = Date.now();
-        frameCoracao += 2; 
-        au.play();
-        bolhaStatus = true;    
-        if(frameCoracao >= 6){
-            vidaStatus = false;
-        } 
-        
+        if(tipo == 0){
+            tempobolha = Date.now();
+            if(frameCoracao == 5){
+                frameCoracao++;
+            }
+            else{
+                frameCoracao += 2;
+            } 
+            danoSom.play();
+            bolhaStatus = true;    
+            if(frameCoracao >= 6){
+                vidaStatus = false;
+            }     
+        }
+        testeColisao = false;
     }
+    return testeColisao;
 }
 
     //peixe.x = coracao?.x??45; --> Testar se existe
 
 //gameOver
 
+let somGameOver = true;
 function gameOver(){
     carregarBackground();
     carregarPeixe();
@@ -439,18 +648,31 @@ function gameOver(){
     carregarBackground2();
     carregarPontos();
     carregarCoracao();
+    carregarMoeda();
+    carregarPowerUp();
+    musica1Som.pause();
+    if(somGameOver){
+        gameOverSom.play();
+        somGameOver = false;
+    }
 }
 
 //movimento
 
-var gravidade = 1.4;
-var nadar = 10;
+let gravidade = 1.4;
+let nadar = 10;
 function movimento(){
     if(keys.w.pressed && peixeHitbox.y >0){
         peixe.y -= nadar; 
+        if(dobroVelocidade){
+            peixe.y -= nadar/2;
+        }
     }
     else if (keys.s.pressed && peixeHitbox.y+peixeHitbox.h<height){
         peixe.y += nadar; 
+        if(dobroVelocidade){
+            peixe.y += nadar/2;
+        }
     }
     else if(peixeHitbox.y+peixeHitbox.h<height){
         peixe.y += gravidade; 
@@ -463,11 +685,11 @@ function movimento(){
     }
 }
 
-//mapa - barreiras
+//mapa
 
-var velocidade = 14;
+let velocidade = 14;
 function atualizarBarreiras(){
-    for(var i=0; i<numeroBarreiras; i++){
+    for(let i=0; i<numeroBarreiras; i++){
         if(barreiras[i].x+barreiras[i].w>0){
             barreiras[i].x -= velocidade;
             //barreiras[i].y += 0.3;
@@ -488,10 +710,10 @@ function ale(min, max) {
 
 //niveis
 
-var variacao = 300;
-var nivel = 1;
+let variacao = 300;
+let nivel = 1;
 function niveis (){
-    console.log("Velocidade = "+velocidade+"\nNadar = "+nadar);
+    //console.log("Velocidade = "+velocidade+"\nNadar = "+nadar);
     if(quantidadePontos-(variacao*nivel)>=0){
         nivel++;
         velocidade += 1;
@@ -502,7 +724,7 @@ function niveis (){
 
 //teclas
 
-var keys = {
+let keys = {
     w:{
         pressed:false,
     },
@@ -521,16 +743,31 @@ window.addEventListener("keydown", (evt)=>{
             keys.s.pressed = true;
             keys.w.pressed = false;
         }
+        if(menu){
+            menu = false;
+            musicaAberturaSom.pause();
+            loop();
+        }
     }
 });
 
 botaoUp.addEventListener("touchstart", (evt)=>{
     keys.w.pressed = true;
     keys.s.pressed = false;
+    if(menu){
+        menu = false;
+        musicaAberturaSom.pause();
+        loop();
+    }
 });
 botaoDown.addEventListener("touchstart", (evt)=>{
     keys.s.pressed = true;
     keys.w.pressed = false;
+    if(menu){
+        menu = false;
+        musicaAberturaSom.pause();
+        loop();
+    }
 });
 
 window.addEventListener("keyup", (evt)=>{
