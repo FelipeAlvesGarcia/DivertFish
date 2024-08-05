@@ -119,7 +119,7 @@ function loop(){
     if(Date.now() - tempoJogo >= (1000/60)){
         if(vidaStatus){
             ctx.clearRect(0, 0, width, height)
-            //musica1Som.play();
+            musica1Som.play();
             peixe.frame = frame(peixe.frame, peixe.maxFrame);
             powerUps.frame = frame(powerUps.frame, powerUps.maxFrame);
             dobroPonto = tempo(tempoDobroPonto, tempoPowerUp);
