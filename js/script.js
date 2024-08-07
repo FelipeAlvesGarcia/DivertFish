@@ -33,6 +33,8 @@ let bolhasImg = new Image();
 bolhasImg.src = "./img/bolhas.png";
 let barreiraVerticalImg = new Image();
 barreiraVerticalImg.src = "img/vertical.png";
+let barreiraHorizontalImg = new Image();
+barreiraHorizontalImg.src = "img/horizontal.png";
 let bolhaImg = new Image();
 bolhaImg.src = "img/bolha.png";
 let powerUpImg = new Image();
@@ -113,6 +115,7 @@ botaoDown.addEventListener("touchend", (evt)=>{
 
 //-----------------------------------------------------------------------------------------------//
 
+let hitbox = false;
 let tempoJogo = Date.now();
 let vidaStatus = true;
 function loop(){
@@ -343,8 +346,10 @@ function carregarPeixe(){
     ctx.drawImage(peixeImg, peixe.sx, peixe.sy, peixe.sw, peixe.sh, peixe.x, peixe.y, peixe.w, peixe.h);
     ctx.fillStyle = "rgb(255,155,0)"
     //ctx.fillRect(peixe.x, peixe.y, peixe.w, peixe.h) //peixe
-    //ctx.fillStyle = "rgba(255,255,255,0.5)"
-    //ctx.fillRect(peixeHitbox.x, peixeHitbox.y, peixeHitbox.w, peixeHitbox.h)
+    if(hitbox){
+        ctx.fillStyle = "rgba(255,255,255,0.5)"
+        ctx.fillRect(peixeHitbox.x, peixeHitbox.y, peixeHitbox.w, peixeHitbox.h)
+    }
 }
 
 //Vida
@@ -368,7 +373,7 @@ function carregarCoracao(){
 
 //Barreiras
 
-let quantidadeLixos = 3;
+let quantidadeLixos = 6;
 let barreiraWidth;
 let barreiraHeight;
 let barreiras = [];
@@ -404,6 +409,12 @@ function estruturarBarreiras(i){
         h:barreiraHeight*48*propriedades[i].multh,
         frame:0
     }  
+    if(i<3){
+        barreiras[i].frame = (barreiras[i].w/720);
+        barreiras[i].sx = 2160;
+        barreiras[i].sw = barreiras[i].w;
+        barreiras[i].sh = barreiras[i].h;
+    }
     if(i == 3){
         barreiras[i].frame = (barreiras[i].h/144)-1;
         barreiras[i].sx = 144;
@@ -441,14 +452,15 @@ function carregarBarreiras(){
             ctx.drawImage(lixosImg, barreiras[n].sx*barreiras[n].frame, barreiras[n].sy, barreiras[n].sw, barreiras[n].sh, barreiras[n].x, barreiras[n].y, barreiras[n].w, barreiras[n].h);
         }
         else if(n<3){
-            ctx.fillStyle = "rgba(255,0,0,60%)";
-            ctx.fillRect(barreiras[n].x, barreiras[n].y, barreiras[n].w, barreiras[n].h); 
+            ctx.drawImage(barreiraHorizontalImg, barreiras[n].sx*barreiras[n].frame, barreiras[n].sy, barreiras[n].sw, barreiras[n].sh, barreiras[n].x, barreiras[n].y, barreiras[n].w, barreiras[n].h);
         }
         else{
             ctx.drawImage(barreiraVerticalImg, barreiras[n].sx*barreiras[n].frame, barreiras[n].sy, barreiras[n].sw, barreiras[n].sh, barreiras[n].x, barreiras[n].y, barreiras[n].w, barreiras[n].h);
         }
-        //ctx.fillStyle = "rgba(0,0,0, 0.5)";
-        //ctx.fillRect(barreiras[n].x+8, barreiras[n].y+8, barreiras[n].w-16, barreiras[n].h-16);    
+        if(hitbox){
+            ctx.fillStyle = "rgba(0,0,0, 0.5)";
+            ctx.fillRect(barreiras[n].x+8, barreiras[n].y+8, barreiras[n].w-16, barreiras[n].h-16);    
+        }
     }
 }
 
