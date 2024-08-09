@@ -20,13 +20,13 @@ let peixeMenu = {
     sy:0,
     sw:112,
     sh:64,
-    x:-30,
+    x:400,
     y:-100,
     w:224,
     h:128,
     rotation:30,
     accelX:3,
-    accelY:5
+    direcao:false
 }
 
 function carregarMenu(){
@@ -36,31 +36,38 @@ function carregarMenu(){
         ctx.drawImage(peixeImg, peixeMenu.sx, peixeMenu.sy, peixeMenu.sw, peixeMenu.sh, -peixeMenu.w/2, -peixeMenu.h/2, peixeMenu.w, peixeMenu.h);
         ctx.rotate(-1*(peixeMenu.rotation * Math.PI) / 180);
         ctx.translate((peixeMenu.x + peixeMenu.w/2)*-1, (peixeMenu.y + peixeMenu.h/2)*-1);
-        if(peixeMenu.accelX>0){
-            peixeMenu.accelX+=0.12;            
-        }
-        if(peixeMenu.accelY>0){
-            peixeMenu.accelY-=0.015;            
-            peixeMenu.y+=peixeMenu.accelY;
-        }
-        if(peixeMenu.rotation>0){
-            peixeMenu.rotation-=0.3;
-        }
+
+        if(peixeMenu.accelX<6)
+        peixeMenu.accelX+=0.1;
+
+        peixeMenu.y += (peixeMenu.rotation/4);
+        peixeMenu.rotation-=0.3;
+
     }
-    else if(peixeMenu.accelX > -6){
-        peixeMenu.accelX-=0.5;       
+    else {
+
+        if(peixeMenu.x >= (canvas.width / 2) - (peixeMenu.w / 2)){
+            peixeMenu.direcao = false;
+        }
+        else {
+            peixeMenu.direcao = true;
+        }
+
+        if(peixeMenu.direcao && peixeMenu.accelX < 6){
+            peixeMenu.accelX+=0.5;       
+        }
+        else if(!peixeMenu.direcao){
+            peixeMenu.accelX-=0.5;
+        }
+
         ctx.drawImage(peixeImg, peixeMenu.sx, peixeMenu.sy, peixeMenu.sw, peixeMenu.sh, peixeMenu.x, peixeMenu.y, peixeMenu.w, peixeMenu.h);
     }
-    else if(peixeMenu.accelX < 6){
-        peixeMenu.accelX+=0.5;
-        ctx.drawImage(peixeImg, peixeMenu.sx, peixeMenu.sy, peixeMenu.sw, peixeMenu.sh, peixeMenu.x, peixeMenu.y, peixeMenu.w, peixeMenu.h);
-    }
-    else{
-        ctx.drawImage(peixeImg, peixeMenu.sx, peixeMenu.sy, peixeMenu.sw, peixeMenu.sh, peixeMenu.x, peixeMenu.y, peixeMenu.w, peixeMenu.h);
-    }
+    
+    
     peixeMenu.x+=peixeMenu.accelX;
     peixeMenu.sx = 112*framePeixe;
-    console.log("X: " + peixeMenu.accelX + "\nY: " + peixeMenu.accelY + "\nRotação:" + peixeMenu.rotation * Math.PI + "º");
+    console.log("accelX: " + peixeMenu.accelX);
+    // console.log("X: " + peixeMenu.x + "\nY: " + peixeMenu.y + "\nRotação:" + peixeMenu.rotation * Math.PI + "º");
 }
 
 //Background
@@ -77,7 +84,10 @@ var background = {
 }
 
 function carregarBackground(){
-    ctx.fillStyle = "rgb(0,50,255)";
+    const grad=ctx.createLinearGradient(0,0, 0,canvas.height*0.7);
+    grad.addColorStop(0, "#11799F");
+    grad.addColorStop(1, "#18246B");
+    ctx.fillStyle = grad;
     ctx.fillRect(background.x, background.y, background.w, background.h);
     carregarChao();
 }
