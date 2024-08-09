@@ -13,6 +13,14 @@ canvas.height = height;
 
 var au = document.querySelector("#audioDoeu");
 
+//imagens
+bolhaImg = new Image();
+chao1Img = new Image();
+peixeImg = new Image();
+coracaoImg = new Image();
+
+
+
 //menu
 
 let peixeMenu = {
@@ -108,7 +116,6 @@ function carregarBackground2(){
 
 //Chao
 
-var chao1Img = new Image();
 chao1Img.src = "img/chao1.png";
 
 var chao = [];
@@ -143,7 +150,6 @@ function carregarChao (){
 
 //Peixe
 
-var peixeImg = new Image();
 peixeImg.src = "img/peixe.png"
 var peixe;
 var peixeHitbox;
@@ -178,7 +184,6 @@ function carregarPeixe(){
 //Corações do peixe (vida)
 
 var frameCoracao = 0;
-var coracaoImg = new Image();
 coracaoImg.src = "img/coracao.png";
 var coracao = {
     sx:0,
@@ -287,7 +292,6 @@ function carregarPontos(){
 
 //Bolha
 
-var bolhaImg = new Image();
 bolhaImg.src = "img/bolha.png";
 var bolhaStatus = false;
 var bolha;
@@ -369,7 +373,15 @@ function loopMenu(){
         requestAnimationFrame(loopMenu);
     }
 }
-loopMenu();
+async function carregarImagens(){
+    await Promise.all(
+        Array.from(document.images).map(
+            (image) =>
+                new Promise((resolve) => image.addEventListener("load",resolve))
+        )
+    );
+    loopMenu();
+}
 
 //-----------------------------------------------------------------------------------------------//
 
