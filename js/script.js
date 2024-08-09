@@ -125,6 +125,9 @@ function loop(){
             musica1Som.play();
             peixe.frame = frame(peixe.frame, peixe.maxFrame);
             powerUps.frame = frame(powerUps.frame, powerUps.maxFrame);
+            for (let m=0; m<moeda.length; m++){
+                moeda[m].frame = frame(moeda[m].frame, moeda[m].maxFrame);
+            }
             dobroPonto = tempo(tempoDobroPonto, tempoPowerUp);
             dobroVelocidade = tempo(tempoDobroVelocidade, tempoPowerUp);
             bolha.status = tempo(bolha.tempo, bolha.tempoMax);
@@ -656,9 +659,9 @@ function carregarPowerUp (){
 
 let quantidadeMoeda = 0;
 let moeda = [];
-moeda[0] = {sx:64, sy:0, sw:64, sh:64, x:width*(4/3), y:-200, w:48, h:48}
-moeda[1] = {sx:64, sy:0, sw:64, sh:64, x:width*(5/3), y:-200, w:48, h:48}
-moeda[2] = {sx:64, sy:0, sw:64, sh:64, x:width*(6/3), y:-200, w:48, h:48}
+moeda[0] = {sx:96, sy:0, sw:96, sh:96, x:width*(4/3), y:-200, w:48, h:48, frame:0, maxFrame:6}
+moeda[1] = {sx:96, sy:0, sw:96, sh:96, x:width*(5/3), y:-200, w:48, h:48, frame:2, maxFrame:6}
+moeda[2] = {sx:96, sy:0, sw:96, sh:96, x:width*(6/3), y:-200, w:48, h:48, frame:4, maxFrame:6}
 
 function alocarMoeda (){
     for(let i=0; i<moeda.length; i++){
@@ -699,7 +702,7 @@ function colisaoMoeda(x, y, w, h){
 
 function carregarMoeda (){
     for(let i=0; i<moeda.length; i++){
-        ctx.drawImage(moedaImg, moeda[i].sx, moeda[i].sy, moeda[i].sw, moeda[i].sh, moeda[i].x, moeda[i].y, moeda[i].w, moeda[i].h); 
+        ctx.drawImage(moedaImg, moeda[i].sx*moeda[i].frame, moeda[i].sy, moeda[i].sw, moeda[i].sh, moeda[i].x, moeda[i].y, moeda[i].w, moeda[i].h); 
     }
 }
 
