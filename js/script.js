@@ -213,16 +213,19 @@ botaoUp.addEventListener("click", ()=>{
 //menu
 
 let peixeMenu = {
-    sx:112,
+    sx:0,
     sy:0,
     sw:112,
     sh:64,
-    x:-30,
+    x:400,
     y:-100,
     w:224,
     h:128,
-    rotation:30
+    rotation:30,
+    accelX:3,
+    direcao:false
 }
+
 function carregarMenu(){
     if(peixeMenu.rotation>0){
         ctx.translate(peixeMenu.x + peixeMenu.w/2, peixeMenu.y + peixeMenu.h/2);
