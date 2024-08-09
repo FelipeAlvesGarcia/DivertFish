@@ -66,8 +66,7 @@ function carregarMenu(){
     
     peixeMenu.x+=peixeMenu.accelX;
     peixeMenu.sx = 112*framePeixe;
-    console.log("accelX: " + peixeMenu.accelX);
-    // console.log("X: " + peixeMenu.x + "\nY: " + peixeMenu.y + "\nRotação:" + peixeMenu.rotation * Math.PI + "º");
+
 }
 
 //Background
