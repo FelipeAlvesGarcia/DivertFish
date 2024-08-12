@@ -399,7 +399,7 @@ function carregarCoracao(){
 
 //Barreiras
 
-let quantidadeLixos = 6;
+let quantidadeLixos = 10;
 let barreiraWidth;
 let barreiraHeight;
 let barreiras = [];
