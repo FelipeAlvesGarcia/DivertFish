@@ -154,7 +154,7 @@ function loop(){
             tempoJogo = Date.now();   
         }
         else{
-            gameOver();
+            gameOverCarregar();
         }
     }
     window.requestAnimationFrame(loop);
@@ -510,6 +510,7 @@ function colisao(x, y, w, h, tipo){
             danoSom.play();
             bolha.status = true;    
             if(coracao.frame >= 6){
+                gameOver();
                 gameOverSom.play();
                 vidaStatus = false;
             }     
@@ -709,16 +710,30 @@ function carregarMoeda (){
 //tela
 
 let tela = false;
+let main = document.querySelector('main');
 function ajusteTela (){
-    if(screen.orientation.type == "portrait-primary" || screen.orientation.type == "portrait-secondary"){
+    /*if(screen.orientation.type == "portrait-primary" || screen.orientation.type == "portrait-secondary"){
         screen.orientation.lock("landscape-primary");
-    }
-    canvas.requestFullscreen();
+    }*/
+    main.requestFullscreen();
 }
 
 //gameOver
 
-function gameOver(){
+const pergunta = document.querySelector("#pergunta");
+const lixoPergunta = document.querySelector("#lixoPergunta");
+const resposta = document.querySelector("#resposta");
+const alternativas = document.querySelector("#alternativas");
+const alterA = document.querySelector("#alterA");
+const alterB = document.querySelector("#alterB");
+const alterC = document.querySelector("#alterC");
+
+function gameOver (){
+    pergunta.style.display = "block";
+}
+
+function gameOverCarregar(){
+    console.log("Game Over");
     musica1Som.pause();
     carregarBackground();
     carregarChao();
@@ -754,7 +769,7 @@ function movimento(){
     if(keys.w.pressed || keys.s.pressed){
         if(!tela){
             ajusteTela();
-            tela = true;
+            tela = true;    
         }
     }
 }
