@@ -56,10 +56,24 @@ let keys = {
     s:{
         pressed:false,
     },
+    d:{
+        pressed:false,
+    },
+    a:{
+        pressed:false,
+    }
 }
 
 window.addEventListener("keydown", (evt)=>{
     if(evt.key){
+        if(evt.key=="ArrowRight" || evt.key=='d'){
+            keys.d.pressed = true;
+            keys.a.pressed = false;
+        }
+        else if(evt.key=="ArrowLeft" || evt.key=='a'){
+            keys.a.pressed = true;
+            keys.d.pressed = false;
+        }
         if(evt.key=="ArrowUp" || evt.key=='w'){
             keys.w.pressed = true;
             keys.s.pressed = false;
@@ -71,7 +85,8 @@ window.addEventListener("keydown", (evt)=>{
         if(menu){
             menu = false;
             musicaAberturaSom.pause();
-            loop();
+            musica1Som.play();
+            loopGame();
         }
     }
 });
@@ -82,7 +97,8 @@ botaoUp.addEventListener("touchstart", (evt)=>{
     if(menu){
         menu = false;
         musicaAberturaSom.pause();
-        loop();
+        musica1Som.play();
+        loopGame();
     }
 });
 botaoDown.addEventListener("touchstart", (evt)=>{
@@ -91,12 +107,19 @@ botaoDown.addEventListener("touchstart", (evt)=>{
     if(menu){
         menu = false;
         musicaAberturaSom.pause();
-        loop();
+        musica1Som.play();
+        loopGame();
     }
 });
 
 window.addEventListener("keyup", (evt)=>{
     if(evt.key){
+        if(evt.key=="ArrowRight" || evt.key=='d'){
+            keys.d.pressed = false;
+        }
+        else if(evt.key=="ArrowLeft" || evt.key=='a'){
+            keys.a.pressed = false;
+        }
         if(evt.key=="ArrowUp" || evt.key=='w'){
             keys.w.pressed = false;
         }
@@ -118,11 +141,10 @@ botaoDown.addEventListener("touchend", (evt)=>{
 let hitbox = false;
 let tempoJogo = Date.now();
 let vidaStatus = true;
-function loop(){
+function loopGame(){
     if(Date.now() - tempoJogo >= (1000/60)){
         if(vidaStatus){
             ctx.clearRect(0, 0, width, height)
-            musica1Som.play();
             peixe.frame = frame(peixe.frame, peixe.maxFrame);
             powerUps.frame = frame(powerUps.frame, powerUps.maxFrame);
             for (let m=0; m<moeda.length; m++){
@@ -157,13 +179,12 @@ function loop(){
             gameOverCarregar();
         }
     }
-    window.requestAnimationFrame(loop);
+    window.requestAnimationFrame(loopGame);
 }
 
 let menu = true;
 function loopMenu(){
     if(Date.now() - tempoJogo >= (1000/60) && menu){
-        musicaAberturaSom.play();
         peixe.frame = frame(peixe.frame, peixe.maxFrame);
         carregarBackground();
         carregarChao();
@@ -209,6 +230,7 @@ let comecou = false;
 botaoUp.addEventListener("click", ()=>{
     if(!comecou){
         comecou = true;
+        musicaAberturaSom.play();
         loopMenu();
     }
 });
@@ -259,8 +281,8 @@ function carregarMenu(){
         else if(!peixeMenu.direcao){
             peixeMenu.accelX-=0.5;
         }
-
         ctx.drawImage(peixeImg, peixeMenu.sx, peixeMenu.sy, peixeMenu.sw, peixeMenu.sh, peixeMenu.x, peixeMenu.y, peixeMenu.w, peixeMenu.h);
+    
     }
     
     
@@ -766,6 +788,19 @@ function movimento(){
     else if(peixeHitbox.y+peixeHitbox.h<height){
         peixe.y += gravidade; 
     }
+    if(keys.d.pressed && peixeHitbox.x+peixeHitbox.w<width){
+        peixe.x += nadar;
+        if(dobroVelocidade){
+            peixe.x += nadar/2;
+        }
+    }
+    else if(keys.a.pressed && peixeHitbox.x>0){
+        peixe.x -= nadar;
+        if(dobroVelocidade){
+            peixe.x -= nadar/2;
+        }
+    }
+
     if(keys.w.pressed || keys.s.pressed){
         if(!tela){
             ajusteTela();
