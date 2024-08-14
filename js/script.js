@@ -157,7 +157,7 @@ function loop(){
             gameOver();
         }
     }
-    requestAnimationFrame(loop);
+    window.requestAnimationFrame(loop);
 }
 
 let menu = true;
@@ -484,7 +484,7 @@ function carregarBarreiras(){
             ctx.drawImage(barreiraVerticalImg, barreiras[n].sx*barreiras[n].frame, barreiras[n].sy, barreiras[n].sw, barreiras[n].sh, barreiras[n].x, barreiras[n].y, barreiras[n].w, barreiras[n].h);
         }
         if(hitbox){
-            ctx.fillStyle = "rgba(0,0,0, 0.5)";
+            ctx.fillStyle = "rgba(255,0,0, 0.5)";
             ctx.fillRect(barreiras[n].x+8, barreiras[n].y+8, barreiras[n].w-16, barreiras[n].h-16);    
         }
     }
