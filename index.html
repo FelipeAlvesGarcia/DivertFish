@@ -11,6 +11,7 @@
 
         </header>
         <main>
+
             <canvas id="tela">
 
             </canvas>
@@ -26,15 +27,50 @@
             <div id="bo1"></div>
             <div id="bo2"></div>
             
-            <div id="pergunta">
-                <img src="" alt="" id="lixoPergunta">
-                <h2 id="resposta">Pergunta?</h2>
-                <div id="alternativas">
-                    <img src="" alt="" id="alterA">
-                    <img src="" alt="" id="alterB">
-                    <img src="" alt="" id="alterC">
+            <div id="menu">
+                <div class="linha">
+                    <div class="bgOpcao diferencaOpcao">
+                        <img src="img/bolha.png" alt="">
+                        <div class="opcao"><img src="img/bolha.png" alt=""></div>
+                    </div>
+                    <div class="bgOpcaoPrincipal">
+                        <img src="img/bolha.png" alt="">
+                        <div id="jogar" class="opcaoPrincipal"><img src="img/bolha.png" alt=""></div>
+                    </div>
+                    <div class="bgOpcao diferencaOpcao">
+                        <img src="img/bolha.png" alt="">
+                        <div class="opcao"><img src="img/bolha.png" alt=""></div>
+                    </div>
                 </div>
-                <input type="text" id="resposta">
+                <div class="linha">
+                    <div class="bgOpcao">
+                        <img src="img/bolha.png" alt="">
+                        <div class="opcao"><img src="img/bolha.png" alt=""></div>
+                    </div>
+                    <div class="bgOpcao">
+                        <img src="img/bolha.png" alt="">
+                        <div class="opcao"><img src="img/bolha.png" alt=""></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="pergunta">
+                <h2 id="resposta">Qual lixeira é a correta para colocar o lixo abaixo?</h2>
+                <div id="lixoPergunta"><img src="img/lixosConjunto.png" alt=""></div>
+                <div id="alternativas">
+                    <div class="bgAlternativa" id="alterA">
+                        <img src="img/bolha.png" alt="">
+                        <div class="alternativa"><img src="img/lixeiras.png" alt="" style="transform: translateX(calc(0 * -7vw));"></div>
+                    </div>
+                    <div class="bgAlternativa" id="alterB" style="margin-top: 5vw;">
+                        <img src="img/bolha.png" alt="">
+                        <div class="alternativa"><img src="img/lixeiras.png" alt="" style="transform: translateX(calc(1 * -7vw));"></div>
+                    </div>
+                    <div class="bgAlternativa" id="alterC">
+                        <img src="img/bolha.png" alt="">
+                        <div class="alternativa"><img src="img/lixeiras.png" alt="" style="transform: translateX(calc(2 * -7vw));"></div>
+                    </div>
+                </div>
             </div>
         </main>
         <footer>

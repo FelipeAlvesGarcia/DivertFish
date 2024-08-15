@@ -82,34 +82,16 @@ window.addEventListener("keydown", (evt)=>{
             keys.s.pressed = true;
             keys.w.pressed = false;
         }
-        if(menu){
-            menu = false;
-            musicaAberturaSom.pause();
-            musica1Som.play();
-            loopGame();
-        }
     }
 });
 
 botaoUp.addEventListener("touchstart", (evt)=>{
     keys.w.pressed = true;
     keys.s.pressed = false;
-    if(menu){
-        menu = false;
-        musicaAberturaSom.pause();
-        musica1Som.play();
-        loopGame();
-    }
 });
 botaoDown.addEventListener("touchstart", (evt)=>{
     keys.s.pressed = true;
     keys.w.pressed = false;
-    if(menu){
-        menu = false;
-        musicaAberturaSom.pause();
-        musica1Som.play();
-        loopGame();
-    }
 });
 
 window.addEventListener("keyup", (evt)=>{
@@ -150,8 +132,8 @@ function loopGame(){
             for (let m=0; m<moeda.length; m++){
                 moeda[m].frame = frame(moeda[m].frame, moeda[m].maxFrame);
             }
-            dobroPonto = tempo(tempoDobroPonto, tempoPowerUp);
-            dobroVelocidade = tempo(tempoDobroVelocidade, tempoPowerUp);
+            powerUpAtributos.dobroPontoStatus = tempo(powerUpAtributos.dobroPonto, powerUpAtributos.dobroPontoMax);
+            powerUpAtributos.dobroVelocidadeStatus = tempo(powerUpAtributos.dobroVelocidade, powerUpAtributos.dobroVelocidadeMax);
             bolha.status = tempo(bolha.tempo, bolha.tempoMax);
             mapa();
             movimento();
@@ -159,7 +141,7 @@ function loopGame(){
             carregarBackground();
             carregarChao();
             carregarPeixe();
-            if (bolha.status){carregarBolha()}
+            if (bolha.status || bolha.statusPowerUp){carregarBolha()}
             carregarBarreiras();
             alocarPowerUp();
             carregarPowerUp();
@@ -229,6 +211,7 @@ function frame (frame, maxFrame){
 let comecou = false;
 botaoUp.addEventListener("click", ()=>{
     if(!comecou){
+        opcoesMenu.style.display = "block";
         comecou = true;
         musicaAberturaSom.play();
         loopMenu();
@@ -290,6 +273,18 @@ function carregarMenu(){
     peixeMenu.sx = 112 * peixe.frame;
 
 }
+
+const jogar = document.getElementById("jogar");
+const opcoesMenu = document.getElementById("menu");
+jogar.addEventListener("click", ()=>{
+    ajusteTela();
+    tela = true;    
+    opcoesMenu.style.display = "none";
+    menu = false;
+    musicaAberturaSom.pause();
+    musica1Som.play();
+    loopGame();
+});
 
 //Background
 
@@ -554,7 +549,7 @@ let pontos = {
 function carregarPontos(){
     if(vidaStatus){
         quantidadePontos += velocidade/40; 
-        if(dobroPonto){
+        if(powerUpAtributos.dobroPontoStatus){
             quantidadePontos += velocidade/40;   
         }      
     }
@@ -587,7 +582,22 @@ function carregarBolha(){
     ctx.globalAlpha = 1;
 }
 
+//Poderes
+
+function carregarMenuPoderes (){
+    
+}
+
 //Power Up
+
+let powerUpAtributos = {
+    dobroPonto : Date.now(),
+    dobroPontoMax : 10000,
+    dobroPontoStatus : false,
+    dobroVelocidade : Date.now(),
+    dobroVelocidadeMax : 9000,
+    dobroVelocidadeStatus : false,
+}
 
 let powerUps = {
     sx:64,
@@ -598,7 +608,7 @@ let powerUps = {
     y:0,
     w:48,
     h:48,
-    tipo:ale(0, 6),
+    tipo:ale(0, 4),
     frame:0,
     maxFrame:7
 }
@@ -612,7 +622,7 @@ function alocarPowerUp (){
     if(tempoPower <= quantidadePontos){
         tempoPowerPassado = (maxTempoPower-tempoPowerPassado) + ale(minTempoPower, maxTempoPower);
         tempoPower = tempoPowerPassado + quantidadePontos;
-        powerUps.tipo = ale(0, 6);
+        powerUps.tipo = ale(0, 4);
         powerUps.x = width;
         let espacoLivre;
         do{
@@ -625,11 +635,6 @@ function alocarPowerUp (){
     }
 }
 
-let tempoDobroPonto = 0;
-let tempoDobroVelocidade = 0;
-let dobroPonto = false;
-let dobroVelocidade = false;
-let tempoPowerUp = 7500;
 function colisaoPowerUp(x, y, w, h){
     if((x + w >= powerUps.x)
     &&(x <= powerUps.x + powerUps.w)
@@ -639,7 +644,7 @@ function colisaoPowerUp(x, y, w, h){
         if(powerUps.tipo == 0){
             powerUpSom.play();
             if(coracao.frame > 0)
-                coracao.frame--;
+                coracao.frame -= 2;
         }
         else if(powerUps.tipo == 1){
             powerUpSom.play();
@@ -648,27 +653,19 @@ function colisaoPowerUp(x, y, w, h){
         }
         else if(powerUps.tipo == 2){
             powerUpSom.play();
-            tempoDobroPonto = Date.now();
-            dobroPonto = true;
+            powerUpAtributos.dobroPonto = Date.now();
+            powerUpAtributos.dobroPontoStatus = true;
         }
         else if(powerUps.tipo == 3){
             powerUpSom.play();
-            tempoDobroVelocidade = Date.now();
-            dobroVelocidade = true;
+            powerUpAtributos.dobroVelocidade = Date.now();
+            powerUpAtributos.dobroVelocidadeStatus = true;
         }
         else if(powerUps.tipo == 4){
-            superPowerUpSom.play();
-            coracao.frame = 0;
-        }
-        else if(powerUps.tipo == 5){
             superPowerUpSom.play();
             for(let i=0; i<barreiras.length; i++){
                 barreiras[i].y = -height;
             }
-        }
-        else if(powerUps.tipo == 6){
-            powerUpSom.play();
-            quantidadePontos += 150;
         }
     }
 }
@@ -731,7 +728,6 @@ function carregarMoeda (){
 
 //tela
 
-let tela = false;
 let main = document.querySelector('main');
 function ajusteTela (){
     /*if(screen.orientation.type == "portrait-primary" || screen.orientation.type == "portrait-secondary"){
@@ -744,14 +740,13 @@ function ajusteTela (){
 
 const pergunta = document.querySelector("#pergunta");
 const lixoPergunta = document.querySelector("#lixoPergunta");
-const resposta = document.querySelector("#resposta");
 const alternativas = document.querySelector("#alternativas");
 const alterA = document.querySelector("#alterA");
 const alterB = document.querySelector("#alterB");
 const alterC = document.querySelector("#alterC");
 
 function gameOver (){
-    pergunta.style.display = "block";
+    pergunta.style.display = "flex";
 }
 
 function gameOverCarregar(){
@@ -768,6 +763,24 @@ function gameOverCarregar(){
     carregarCoracao();
 }
 
+alterB.addEventListener("click", ()=>{
+    keys.d.pressed = false;
+    keys.a.pressed = false;
+    keys.w.pressed = false;
+    keys.s.pressed = false;
+    dobroPonto = false;
+    dobroVelocidade = false;
+    vidaStatus = true;
+    musica1Som.play();
+    coracao.frame = 4;
+    bolha.tempo = Date.now();
+    bolha.status = true;  
+    for(let i=0; i<barreiras.length; i++){
+        barreiras[i].y = -height;
+    }
+    pergunta.style.display = "none";
+});
+
 //movimento
 
 let gravidade = 1.4;
@@ -775,13 +788,13 @@ let nadar = 10;
 function movimento(){
     if(keys.w.pressed && peixeHitbox.y >0){
         peixe.y -= nadar; 
-        if(dobroVelocidade){
+        if(powerUpAtributos.dobroVelocidadeStatus){
             peixe.y -= nadar/2;
         }
     }
     else if (keys.s.pressed && peixeHitbox.y+peixeHitbox.h<height){
         peixe.y += nadar; 
-        if(dobroVelocidade){
+        if(powerUpAtributos.dobroVelocidadeStatus){
             peixe.y += nadar/2;
         }
     }
@@ -790,21 +803,14 @@ function movimento(){
     }
     if(keys.d.pressed && peixeHitbox.x+peixeHitbox.w<width){
         peixe.x += nadar;
-        if(dobroVelocidade){
+        if(powerUpAtributos.dobroVelocidadeStatus){
             peixe.x += nadar/2;
         }
     }
     else if(keys.a.pressed && peixeHitbox.x>0){
         peixe.x -= nadar;
-        if(dobroVelocidade){
+        if(powerUpAtributos.dobroVelocidadeStatus){
             peixe.x -= nadar/2;
-        }
-    }
-
-    if(keys.w.pressed || keys.s.pressed){
-        if(!tela){
-            ajusteTela();
-            tela = true;    
         }
     }
 }
