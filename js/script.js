@@ -595,7 +595,7 @@ let powerUpAtributos = {
     dobroPontoMax : 10000,
     dobroPontoStatus : false,
     dobroVelocidade : Date.now(),
-    dobroVelocidadeMax : 9000,
+    dobroVelocidadeMax : 10000,
     dobroVelocidadeStatus : false,
 }
 
