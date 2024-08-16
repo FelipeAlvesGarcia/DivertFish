@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="./css/divertFish.css">
+        <title>Divert Fish</title>
+    </head>
+    <body>
+        <header>
+
+        </header>
+        <main>
+
+            <canvas id="tela">
+
+            </canvas>
+            <audio src="./audio/aiDoeu.mp3" id="audioDoeu"></audio>
+            <audio src="./audio/dano.mp3" id="dano"></audio>
+            <audio src="./audio/musica1.mp3" id="musica1" loop></audio>
+            <audio src="./audio/superPowerUp.mp3" id="superPowerUp"></audio>
+            <audio src="./audio/powerUp.mp3" id="powerUp"></audio>
+            <audio src="./audio/abertura.mp3" id="musicaAbertura" loop></audio>
+            <audio src="./audio/coin.mp3" id="moeda"></audio>
+            <audio src="./audio/gameOver.mp3" id="gameOver"></audio>
+            <audio src="./audio/coin2.mp3" id="moeda2"></audio>
+            <div id="bo1"></div>
+            <div id="bo2"></div>
+            
+            <div id="menu">
+                <div class="linha">
+                    <div class="bgOpcao diferencaOpcao">
+                        <img src="imgDivertFish/bolha.png" alt="">
+                        <div class="opcao"><img src="imgDivertFish/bolha.png" alt=""></div>
+                    </div>
+                    <div class="bgOpcaoPrincipal">
+                        <img src="imgDivertFish/bolha.png" alt="">
+                        <div id="jogar" class="opcaoPrincipal"><img src="imgDivertFish/jogar.png" alt=""></div>
+                    </div>
+                    <div class="bgOpcao diferencaOpcao">
+                        <img src="imgDivertFish/bolha.png" alt="">
+                        <div class="opcao"><img src="imgDivertFish/bolha.png" alt=""></div>
+                    </div>
+                </div>
+                <div class="linha">
+                    <div class="bgOpcao">
+                        <img src="imgDivertFish/bolha.png" alt="">
+                        <div class="opcao"><img src="imgDivertFish/bolha.png" alt=""></div>
+                    </div>
+                    <div class="bgOpcao">
+                        <img src="imgDivertFish/bolha.png" alt="">
+                        <div class="opcao"><img src="imgDivertFish/bolha.png" alt=""></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="pergunta">
+                <h2 id="resposta">Qual lixeira é a correta para colocar o lixo abaixo?</h2>
+                <div id="lixoPergunta"><img src="imgDivertFish/lixosConjunto.png" alt="" id="lixoPerguntaImg"></div>
+                <div id="alternativas">
+                    <div class="bgAlternativa" id="alterA">
+                        <img src="imgDivertFish/bolha.png" alt="">
+                        <div class="alternativa"><img src="imgDivertFish/lixeiras.png" alt="" style="transform: translateX(calc(0 * -7vw));"></div>
+                    </div>
+                    <div class="bgAlternativa" id="alterB" style="margin-top: 6vw;">
+                        <img src="imgDivertFish/bolha.png" alt="">
+                        <div class="alternativa"><img src="imgDivertFish/lixeiras.png" alt="" style="transform: translateX(calc(1 * -7vw));"></div>
+                    </div>
+                    <div class="bgAlternativa" id="alterC" style="margin-top: 8vw;">
+                        <img src="imgDivertFish/bolha.png" alt="">
+                        <div class="alternativa"><img src="imgDivertFish/lixeiras.png" alt="" style="transform: translateX(calc(2 * -7vw));"></div>
+                    </div>
+                    <div class="bgAlternativa" id="alterD" style="margin-top: 6vw;">
+                        <img src="imgDivertFish/bolha.png" alt="">
+                        <div class="alternativa"><img src="imgDivertFish/lixeiras.png" alt="" style="transform: translateX(calc(3 * -7vw));"></div>
+                    </div>
+                    <div class="bgAlternativa" id="alterE">
+                        <img src="imgDivertFish/bolha.png" alt="">
+                        <div class="alternativa"><img src="imgDivertFish/lixeiras.png" alt="" style="transform: translateX(calc(4 * -7vw));"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <footer>
+
+        </footer>
+    </body>
+    <script src="./js/divertFish.js"></script>
+</html>

@@ -20,27 +20,27 @@ let gameOverSom = document.querySelector("#gameOver");
 //Imagens
 
 let chao1Img = new Image();
-chao1Img.src = "img/chao1.png";
+chao1Img.src = "imgDivertFish/chao1.png";
 let chao2Img = new Image();
-chao2Img.src = "img/chao2.png";
+chao2Img.src = "imgDivertFish/chao2.png";
 let peixeImg = new Image();
-peixeImg.src = "img/peixe.png"
+peixeImg.src = "imgDivertFish/peixe.png"
 let coracaoImg = new Image();
-coracaoImg.src = "img/coracao.png";
+coracaoImg.src = "imgDivertFish/coracao.png";
 let lixosImg = new Image();
-lixosImg.src = "./img/lixosConjunto.png";
+lixosImg.src = "./imgDivertFish/lixosConjunto.png";
 let bolhasImg = new Image();
-bolhasImg.src = "./img/bolhas.png";
+bolhasImg.src = "./imgDivertFish/bolhas.png";
 let barreiraVerticalImg = new Image();
-barreiraVerticalImg.src = "img/vertical.png";
+barreiraVerticalImg.src = "imgDivertFish/vertical.png";
 let barreiraHorizontalImg = new Image();
-barreiraHorizontalImg.src = "img/horizontal.png";
+barreiraHorizontalImg.src = "imgDivertFish/horizontal.png";
 let bolhaImg = new Image();
-bolhaImg.src = "img/bolha.png";
+bolhaImg.src = "imgDivertFish/bolha.png";
 let powerUpImg = new Image();
-powerUpImg.src = "img/powerUp.png";
+powerUpImg.src = "imgDivertFish/powerUp.png";
 let moedaImg = new Image();
-moedaImg.src = "img/moeda.png";
+moedaImg.src = "imgDivertFish/moeda.png";
 
 //-----------------------------------------------------------------------------------------------//
 
@@ -123,6 +123,7 @@ botaoDown.addEventListener("touchend", (evt)=>{
 let hitbox = false;
 let tempoJogo = Date.now();
 let vidaStatus = true;
+let jogo = false;
 function loopGame(){
     if(Date.now() - tempoJogo >= (1000/60)){
         if(vidaStatus){
@@ -150,6 +151,7 @@ function loopGame(){
             carregarBackground2();
             carregarPontos();
             carregarCoracao();
+            carregarMenuPoderes();
             
             colisao(peixeHitbox.x, peixeHitbox.y, peixeHitbox.w, peixeHitbox.h, 0);
             colisaoPowerUp(peixeHitbox.x, peixeHitbox.y, peixeHitbox.w, peixeHitbox.h);
@@ -161,7 +163,9 @@ function loopGame(){
             gameOverCarregar();
         }
     }
-    window.requestAnimationFrame(loopGame);
+    if(jogo){
+        window.requestAnimationFrame(loopGame);
+    }
 }
 
 let menu = true;
@@ -278,11 +282,32 @@ const jogar = document.getElementById("jogar");
 const opcoesMenu = document.getElementById("menu");
 jogar.addEventListener("click", ()=>{
     ajusteTela();
-    tela = true;    
+    tela = true;   
     opcoesMenu.style.display = "none";
     menu = false;
     musicaAberturaSom.pause();
     musica1Som.play();
+    keys.d.pressed = false;
+    keys.a.pressed = false;
+    keys.w.pressed = false;
+    keys.s.pressed = false;
+    powerUpAtributos.dobroPontoStatus = false;
+    powerUpAtributos.dobroVelocidadeStatus = false;
+    peixe.x = 600;
+    peixe.y = 536;
+    coracao.frame = 0;
+    primeirasBarreiras();
+    quantidadePontos = 0;
+    menuPoderes.quantidade[0] = 1; 
+    menuPoderes.quantidade[1] = 1;
+    powerUps.y += height;
+    for(let i=0; i<moeda.length; i++){
+        moeda[i].y += height;
+    }
+    velocidade = 14;
+    nivel = 1;
+    chance = true;
+    jogo = true;
     loopGame();
 });
 
@@ -416,6 +441,7 @@ function carregarCoracao(){
 
 //Barreiras
 
+let ultimaBarreira = 0;
 let quantidadeLixos = 10;
 let barreiraWidth;
 let barreiraHeight;
@@ -483,7 +509,6 @@ function primeirasBarreiras(){
         }
     }    
 }
-primeirasBarreiras();
 
 function carregarBarreiras(){
     for(let n=0; n<propriedades.length; n++){
@@ -517,6 +542,9 @@ function colisao(x, y, w, h, tipo){
         if(barreiras[n].h == 0 || barreiras[n].w == 0)continue
         if(bolha.status) continue
         if(tipo == 0){
+            if(n>3){
+            ultimaBarreira = barreiras[n].frame;
+            }
             bolha.tempo = Date.now();
             if(coracao.frame == 5){
                 coracao.frame++;
@@ -584,17 +612,48 @@ function carregarBolha(){
 
 //Poderes
 
-function carregarMenuPoderes (){
-    
+let menuPoderes = {
+    fonte:"40px serif",
+    sx:0,
+    sy:0,
+    sw:144,
+    sh:144,
+    x:32,
+    y:[],
+    w:32,
+    h:32,
+    tipo:0,
+    quantidade:[],
 }
+menuPoderes.y[0] = height - 48;
+menuPoderes.y[1] = height - 96;
+menuPoderes.quantidade[0] = 1; //bolha
+menuPoderes.quantidade[1] = 1;
+
+function carregarMenuPoderes (){
+    ctx.font = menuPoderes.fonte;
+    ctx.fillStyle = "rgb(255,255,255)";
+    for(tipo = 0; tipo < menuPoderes.quantidade.length; tipo++){
+        ctx.fillText(menuPoderes.quantidade[tipo], menuPoderes.x+menuPoderes.w+8, menuPoderes.y[tipo]+27);
+        ctx.drawImage(bolhaImg, menuPoderes.sx*menuPoderes.tipo, menuPoderes.sy, menuPoderes.sw, menuPoderes.sh, menuPoderes.x, menuPoderes.y[tipo], menuPoderes.w, menuPoderes.h);
+    }
+}
+
+window.addEventListener("keydown", (evt)=>{
+    if(!bolha.status &&  evt.key == 'b' && menuPoderes.quantidade[0] > 0){
+        bolha.tempo = Date.now();
+        bolha.status = true;
+        menuPoderes.quantidade[0]--;
+    }
+});
 
 //Power Up
 
 let powerUpAtributos = {
-    dobroPonto : Date.now(),
+    dobroPonto : 0,
     dobroPontoMax : 10000,
     dobroPontoStatus : false,
-    dobroVelocidade : Date.now(),
+    dobroVelocidade : 0,
     dobroVelocidadeMax : 10000,
     dobroVelocidadeStatus : false,
 }
@@ -648,8 +707,7 @@ function colisaoPowerUp(x, y, w, h){
         }
         else if(powerUps.tipo == 1){
             powerUpSom.play();
-            bolha.tempo = Date.now();
-            bolha.status = true;    
+            menuPoderes.quantidade[0]++;   
         }
         else if(powerUps.tipo == 2){
             powerUpSom.play();
@@ -739,14 +797,37 @@ function ajusteTela (){
 //gameOver
 
 const pergunta = document.querySelector("#pergunta");
-const lixoPergunta = document.querySelector("#lixoPergunta");
-const alternativas = document.querySelector("#alternativas");
+const lixoPerguntaImg = document.querySelector("#lixoPerguntaImg");
 const alterA = document.querySelector("#alterA");
 const alterB = document.querySelector("#alterB");
 const alterC = document.querySelector("#alterC");
+const alterD = document.querySelector("#alterD");
+const alterE = document.querySelector("#alterE");
+
+let alternativas = {
+    a:false,
+    b:false,
+    c:false,
+    d:false,
+    e:false
+}
+chance = true;
 
 function gameOver (){
     pergunta.style.display = "flex";
+    lixoPerguntaImg.style.transform = "translateX(calc("+ultimaBarreira+" * -12vw))";
+    if(ultimaBarreira == 0){
+        alternativas = {a:false, b:false, c:false, d:true, e:false};
+    }
+    else if(ultimaBarreira < 3){
+        alternativas = {a:true, b:false, c:false, d:false, e:false};
+    }
+    else if(ultimaBarreira < 6){
+        alternativas = {a:false, b:false, c:true, d:false, e:false};
+    }
+    else if(ultimaBarreira < 10){
+        alternativas = {a:false, b:true, c:false, d:false, e:false};
+    }
 }
 
 function gameOverCarregar(){
@@ -763,13 +844,13 @@ function gameOverCarregar(){
     carregarCoracao();
 }
 
-alterB.addEventListener("click", ()=>{
+function corretaVida (){
     keys.d.pressed = false;
     keys.a.pressed = false;
     keys.w.pressed = false;
     keys.s.pressed = false;
-    dobroPonto = false;
-    dobroVelocidade = false;
+    powerUpAtributos.dobroPontoStatus = false;
+    powerUpAtributos.dobroVelocidadeStatus = false;
     vidaStatus = true;
     musica1Som.play();
     coracao.frame = 4;
@@ -778,7 +859,64 @@ alterB.addEventListener("click", ()=>{
     for(let i=0; i<barreiras.length; i++){
         barreiras[i].y = -height;
     }
+    pergunta.style.display = "none"; 
+    return false;
+}
+
+function finalizarJogo (){
     pergunta.style.display = "none";
+    opcoesMenu.style.display = "block";
+    menu = true;
+    tempoJogo = Date.now();
+    nadar = 10;
+    jogo = false;
+    vidaStatus = true;
+    loopMenu();
+}
+
+alterA.addEventListener("click", ()=>{
+    if(alternativas.a && chance){
+        chance = corretaVida();
+    }
+    else{
+        finalizarJogo();
+    }
+});
+
+alterB.addEventListener("click", ()=>{
+    if(alternativas.b && chance){
+        chance = corretaVida();
+    }
+    else{
+        finalizarJogo();
+    }
+});
+
+alterC.addEventListener("click", ()=>{
+    if(alternativas.c && chance){
+        chance = corretaVida();
+    }
+    else{
+        finalizarJogo();
+    }
+});
+
+alterD.addEventListener("click", ()=>{
+    if(alternativas.d && chance){
+        chance = corretaVida();
+    }
+    else{
+        finalizarJogo();
+    }
+});
+
+alterE.addEventListener("click", ()=>{
+    if(alternativas.e && chance){
+        chance = corretaVida();
+    }
+    else{
+        finalizarJogo();
+    }
 });
 
 //movimento
