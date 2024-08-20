@@ -90,7 +90,7 @@ main{
     opacity: 0.6;
 }
 .bgOpcaoPrincipal:hover{
-    opacity: 0.95;
+    opacity: 0.9;
     transform: scale(0.95);
     transition: 200ms;
 }
@@ -161,7 +161,7 @@ main{
     opacity: 0.6;
 }
 .bgAlternativa:hover{
-    opacity: 0.95;
+    opacity: 0.9;
     transform: scale(0.95);
     transition: 200ms;
 }

@@ -144,6 +144,7 @@ function loopGame(){
             carregarPeixe();
             if (bolha.status || bolha.statusPowerUp){carregarBolha()}
             carregarBarreiras();
+            if(tiro.status){tiroBolha()}
             alocarPowerUp();
             carregarPowerUp();
             alocarMoeda();
@@ -299,7 +300,7 @@ jogar.addEventListener("click", ()=>{
     primeirasBarreiras();
     quantidadePontos = 0;
     menuPoderes.quantidade[0] = 1; 
-    menuPoderes.quantidade[1] = 1;
+    menuPoderes.quantidade[1] = 3;
     powerUps.y += height;
     for(let i=0; i<moeda.length; i++){
         moeda[i].y += height;
@@ -540,10 +541,9 @@ function colisao(x, y, w, h, tipo){
         if(y + h < barreiras[n].y+8)continue
         if(y > barreiras[n].y+8 + barreiras[n].h-16)continue
         if(barreiras[n].h == 0 || barreiras[n].w == 0)continue
-        if(bolha.status) continue
-        if(tipo == 0){
+        if(tipo == 0 && !bolha.status){
             if(n>3){
-            ultimaBarreira = barreiras[n].frame;
+                ultimaBarreira = barreiras[n].frame;
             }
             bolha.tempo = Date.now();
             if(coracao.frame == 5){
@@ -559,6 +559,9 @@ function colisao(x, y, w, h, tipo){
                 gameOverSom.play();
                 vidaStatus = false;
             }     
+        }
+        if(tipo == 2){
+            barreiras[n].y -= height;
         }
         testeColisao = false;
         return testeColisao;
@@ -628,7 +631,7 @@ let menuPoderes = {
 menuPoderes.y[0] = height - 48;
 menuPoderes.y[1] = height - 96;
 menuPoderes.quantidade[0] = 1; //bolha
-menuPoderes.quantidade[1] = 1;
+menuPoderes.quantidade[1] = 3; //tiro
 
 function carregarMenuPoderes (){
     ctx.font = menuPoderes.fonte;
@@ -639,6 +642,8 @@ function carregarMenuPoderes (){
     }
 }
 
+//
+
 window.addEventListener("keydown", (evt)=>{
     if(!bolha.status &&  evt.key == 'b' && menuPoderes.quantidade[0] > 0){
         bolha.tempo = Date.now();
@@ -646,6 +651,39 @@ window.addEventListener("keydown", (evt)=>{
         menuPoderes.quantidade[0]--;
     }
 });
+
+//
+
+let tiro = {
+    sx:0,
+    sy:0,
+    sw:144,
+    sh:144,
+    x:peixeHitbox.x+peixeHitbox.w,
+    y:peixeHitbox.y+((peixeHitbox.h-8)/2),
+    w:32,
+    h:32,
+    status:false,
+    velocidade:15,
+}
+
+function tiroBolha (){
+    tiro.x += tiro.velocidade;
+        colisao(tiro.x, tiro.y, tiro.w, tiro.h, 2);
+    if(tiro.x > width){
+        tiro.status = false;
+    }
+    ctx.drawImage(bolhaImg, tiro.sx, tiro.sy, tiro.sw, tiro.sh, tiro.x, tiro.y, tiro.w, tiro.h);
+}
+
+window.addEventListener("keydown", (evt)=>{
+    if(!tiro.status && evt.key == 'v' && menuPoderes.quantidade[1] > 0){
+        menuPoderes.quantidade[1]--;
+        tiro.x = peixeHitbox.x+peixeHitbox.w;
+        tiro.y = peixeHitbox.y+((peixeHitbox.h-tiro.h)/2);
+        tiro.status = true;
+    }
+})
 
 //Power Up
 
@@ -658,40 +696,32 @@ let powerUpAtributos = {
     dobroVelocidadeStatus : false,
 }
 
-let powerUps = {
-    sx:64,
-    sy:0,
-    sw:64,
-    sh:64,
-    x:-width,
-    y:0,
-    w:48,
-    h:48,
-    tipo:ale(0, 4),
-    frame:0,
-    maxFrame:7
-}
+let powerUps = []
+powerUps[0] = {sx:64, sy:0, sw:64, sh:64, x:-width, y:0, w:48, h:48, tipo:ale(0, 5), frame:0, maxFrame:7, tempoPowerPassado: ale(minTempoPower, maxTempoPower), tempoPower : tempoPowerPassado + quantidadePontos}
+powerUps[1] = {sx:64, sy:0, sw:64, sh:64, x:-width, y:0, w:48, h:48, tipo:ale(0, 5), frame:0, maxFrame:7, tempoPowerPassado: ale(minTempoPower, maxTempoPower), tempoPower : tempoPowerPassado + quantidadePontos}
+powerUps[2] = {sx:64, sy:0, sw:64, sh:64, x:-width, y:0, w:48, h:48, tipo:ale(0, 5), frame:0, maxFrame:7, tempoPowerPassado: ale(minTempoPower, maxTempoPower), tempoPower : tempoPowerPassado + quantidadePontos}
 
-let minTempoPower = 100;
-let maxTempoPower = 200;
-let tempoPowerPassado = ale(minTempoPower, maxTempoPower);
-let tempoPower = tempoPowerPassado + quantidadePontos;
+let minTempoPower = 200;
+let maxTempoPower = 400;
 function alocarPowerUp (){
-    powerUps.x -= velocidade;
-    if(tempoPower <= quantidadePontos){
-        tempoPowerPassado = (maxTempoPower-tempoPowerPassado) + ale(minTempoPower, maxTempoPower);
-        tempoPower = tempoPowerPassado + quantidadePontos;
-        powerUps.tipo = ale(0, 4);
-        powerUps.x = width;
-        let espacoLivre;
-        do{
-            espacoLivre = true;
-            powerUps.y = ale(0, 1200 - powerUps.h);
-            if(!colisao(powerUps.x, powerUps.y, powerUps.w, powerUps.h, 1)){
-                espacoLivre = false;
-            }
-        }while(!espacoLivre);
+    for(let i=0; i<powerUps[i].length; i++){
+        powerUps[i].x -= velocidade;
+        if(powerUps[i].tempoPower <= quantidadePontos){
+            powerUps[i].tempoPowerPassado = (maxTempoPower-powerUps[i].tempoPowerPassado) + ale(minTempoPower, maxTempoPower);
+            powerUps[i].tempoPower = powerUps[i].tempoPowerPassado + quantidadePontos;
+            powerUps[i].tipo = ale(0, 5);
+            powerUps[i].x = width;
+            let espacoLivre;
+            do{
+                espacoLivre = true;
+                powerUps[i].y = ale(0, 1200 - powerUps[i].h);
+                if(!colisao(powerUps[i].x, powerUps[i].y, powerUps[i].w, powerUps[i].h, 1)){
+                    espacoLivre = false;
+                }
+            }while(!espacoLivre);
+        }    
     }
+    
 }
 
 function colisaoPowerUp(x, y, w, h){
@@ -724,6 +754,10 @@ function colisaoPowerUp(x, y, w, h){
             for(let i=0; i<barreiras.length; i++){
                 barreiras[i].y = -height;
             }
+        }
+        else if(powerUps.tipo == 5){
+            powerUpSom.play();
+            menuPoderes.quantidade[1] += 2;
         }
     }
 }
@@ -758,18 +792,20 @@ function alocarMoeda (){
     }
 }
 
+let somMoeda = 0;
 function colisaoMoeda(x, y, w, h){
     for(let i=0; i<moeda.length; i++){
         if((x + w >= moeda[i].x)
             &&(x <= moeda[i].x + moeda[i].w)
             &&(y + h >= moeda[i].y)
             &&(y <= moeda[i].y + moeda[i].h)){
-            let som = ale(0, 1);
-            if(som == 0){
+            if(somMoeda == 0){
                 moedaSom.play();
+                somMoeda = 1;
             }
             else{
                 moeda2Som.play();
+                somMoeda = 0;
             }
             moeda[i].y = -200;
             quantidadeMoeda++;
@@ -871,6 +907,7 @@ function finalizarJogo (){
     nadar = 10;
     jogo = false;
     vidaStatus = true;
+    musicaAberturaSom.play();
     loopMenu();
 }
 
