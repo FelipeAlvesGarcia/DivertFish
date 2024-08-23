@@ -49,14 +49,6 @@ moedaImg.src = "img/moeda.png";
 let botaoUp = document.querySelector("#bo1");
 let botaoDown = document.querySelector("#bo2");
 
-let keys = {
-    w:{
-        pressed:false,
-    },
-    s:{
-        pressed:false,
-    },
-}
 
 window.addEventListener("keydown", (evt)=>{
     if(evt.key){
@@ -115,7 +107,6 @@ botaoDown.addEventListener("touchend", (evt)=>{
 
 //-----------------------------------------------------------------------------------------------//
 
-var au = document.querySelector("#audioDoeu");
 
 //menu
 
