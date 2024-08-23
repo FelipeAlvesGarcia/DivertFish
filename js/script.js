@@ -5,107 +5,20 @@ let height = 1200;
 canvas.width = width;
 canvas.height = height;
 
-//Audios
 
-let au = document.querySelector("#audioDoeu");
-let danoSom = document.querySelector("#dano");
-let musica1Som = document.querySelector("#musica1");
-let superPowerUpSom = document.querySelector("#superPowerUp");
-let powerUpSom = document.querySelector("#powerUp");
-let musicaAberturaSom = document.querySelector("#musicaAbertura");
-let moedaSom = document.querySelector("#moeda");
-let moeda2Som = document.querySelector("#moeda2");
-let gameOverSom = document.querySelector("#gameOver");
-
-//Imagens
-
-let chao1Img = new Image();
-chao1Img.src = "img/chao1.png";
-let chao2Img = new Image();
-chao2Img.src = "img/chao2.png";
-let peixeImg = new Image();
-peixeImg.src = "img/peixe.png"
-let coracaoImg = new Image();
-coracaoImg.src = "img/coracao.png";
-let lixosImg = new Image();
-lixosImg.src = "./img/lixosConjunto.png";
-let bolhasImg = new Image();
-bolhasImg.src = "./img/bolhas.png";
-let barreiraVerticalImg = new Image();
-barreiraVerticalImg.src = "img/vertical.png";
-let barreiraHorizontalImg = new Image();
-barreiraHorizontalImg.src = "img/horizontal.png";
-let bolhaImg = new Image();
-bolhaImg.src = "img/bolha.png";
-let powerUpImg = new Image();
-powerUpImg.src = "img/powerUp.png";
-let moedaImg = new Image();
-moedaImg.src = "img/moeda.png";
+//console.log(window.innerWidth)
+//console.log(innerHeight)
 
 //-----------------------------------------------------------------------------------------------//
 
-//teclas
+var au = document.querySelector("#audioDoeu");
 
-let botaoUp = document.querySelector("#bo1");
-let botaoDown = document.querySelector("#bo2");
+//imagens
+bolhaImg = new Image();
+chao1Img = new Image();
+peixeImg = new Image();
+coracaoImg = new Image();
 
-
-window.addEventListener("keydown", (evt)=>{
-    if(evt.key){
-        if(evt.key=="ArrowUp" || evt.key=='w'){
-            keys.w.pressed = true;
-            keys.s.pressed = false;
-        }
-        else if(evt.key=="ArrowDown" || evt.key=='s'){
-            keys.s.pressed = true;
-            keys.w.pressed = false;
-        }
-        if(menu){
-            menu = false;
-            musicaAberturaSom.pause();
-            loop();
-        }
-    }
-});
-
-botaoUp.addEventListener("touchstart", (evt)=>{
-    keys.w.pressed = true;
-    keys.s.pressed = false;
-    if(menu){
-        menu = false;
-        musicaAberturaSom.pause();
-        loop();
-    }
-});
-botaoDown.addEventListener("touchstart", (evt)=>{
-    keys.s.pressed = true;
-    keys.w.pressed = false;
-    if(menu){
-        menu = false;
-        musicaAberturaSom.pause();
-        loop();
-    }
-});
-
-window.addEventListener("keyup", (evt)=>{
-    if(evt.key){
-        if(evt.key=="ArrowUp" || evt.key=='w'){
-            keys.w.pressed = false;
-        }
-        else if(evt.key=="ArrowDown" || evt.key=='s'){
-            keys.s.pressed = false;
-        }
-    }
-});
-
-botaoUp.addEventListener("touchend", (evt)=>{
-    keys.w.pressed = false;
-});
-botaoDown.addEventListener("touchend", (evt)=>{
-    keys.s.pressed = false;
-});
-
-//-----------------------------------------------------------------------------------------------//
 
 
 //menu
@@ -157,8 +70,11 @@ function carregarMenu(){
 
         ctx.drawImage(peixeImg, peixeMenu.sx, peixeMenu.sy, peixeMenu.sw, peixeMenu.sh, peixeMenu.x, peixeMenu.y, peixeMenu.w, peixeMenu.h);
     }
+    
+    
+    peixeMenu.x+=peixeMenu.accelX;
     peixeMenu.sx = 112*framePeixe;
-    console.log("X: " + peixeMenu.x + "\nY: " + peixeMenu.y + "\nRotação:" + peixeMenu.rotation * Math.PI + "º");
+
 }
 
 //Background
@@ -179,7 +95,10 @@ gradient.addColorStop(0.7, "#000095");
 gradient.addColorStop(1, "#06006a");
 
 function carregarBackground(){
-    ctx.fillStyle = "rgb(0,50,255)";
+    const grad=ctx.createLinearGradient(0,0, 0,canvas.height*0.7);
+    grad.addColorStop(0, "#11799F");
+    grad.addColorStop(1, "#18246B");
+    ctx.fillStyle = grad;
     ctx.fillRect(background.x, background.y, background.w, background.h);
 }
 
@@ -200,7 +119,6 @@ function carregarBackground2(){
 
 //Chao
 
-var chao1Img = new Image();
 chao1Img.src = "img/chao1.png";
 
 var chao = [];
@@ -211,10 +129,10 @@ function carregarChao (){
     for(let i=0; i<chao.length; i++){
         if((i+2)%2 == 0){
             if(chao[i].x < -chao[i+1].w){
-                chao[i].x = chao[i+1].x+chao[i].w-chao[i].variacao;
+                chao[i].x = chao[i+1].x+chao[i].w-chao[i].variacao+(nadar-10);
             }
             else if(vidaStatus){
-                chao[i].x -= chao[i].variacao;
+                chao[i].x -= chao[i].variacao+(nadar-10);
             }
         }
         else{
@@ -222,17 +140,11 @@ function carregarChao (){
                 chao[i].x = chao[i-1].x+chao[i].w;
             }
             else if(vidaStatus){
-                chao[i].x -= chao[i].variacao;
+                chao[i].x -= chao[i].variacao+(nadar-10);
             }
         }
         ctx.drawImage(chao[i].img, 0, 0, chao[i].w, height, chao[i].x, chao[i].y, chao[i].w, height);
         if(i+2%2 == 1){
-            //ajustar o x do chao
-            if(chao[i].x - chao[i-1].x == 4800 || chao[i].x - chao[i-1].x == -4800){
-            }else{
-                chao[i-1].x -= (nadar-10);
-            }
-            console.log(chao[i].x - chao[i-1].x);
             ctx.fillStyle = "rgba(0,50,255,10%)";
             ctx.fillRect(background.x, background.y, background.w, background.h);
         }
@@ -241,7 +153,6 @@ function carregarChao (){
 
 //Peixe
 
-var peixeImg = new Image();
 peixeImg.src = "img/peixe.png"
 var peixe;
 var peixeHitbox;
@@ -280,7 +191,6 @@ function carregarPeixe(){
 //Corações do peixe (vida)
 
 var frameCoracao = 0;
-var coracaoImg = new Image();
 coracaoImg.src = "img/coracao.png";
 var coracao = {
     sx:0,
@@ -444,7 +354,6 @@ function carregarPontos(){
 
 //Bolha
 
-var bolhaImg = new Image();
 bolhaImg.src = "img/bolha.png";
 var bolhaStatus = false;
 var bolha;
@@ -500,7 +409,7 @@ function loop(){
         }
         else{
             gameOver();
-            console.log("GAME OVER");
+            console.log("GAME OVER")
         }
     }
 }
@@ -510,72 +419,42 @@ function carregarPowerUp (){
     ctx.drawImage(powerUpImg, powerUps.sx, powerUps.sy, powerUps.sw, powerUps.sh, powerUps.x, powerUps.y, powerUps.w, powerUps.h);
 }
 
-//Moeda
-
-let quantidadeMoeda = 0;
-let moeda = [];
-moeda[0] = {sx:64, sy:0, sw:64, sh:64, x:width*(4/3), y:-200, w:48, h:48}
-moeda[1] = {sx:64, sy:0, sw:64, sh:64, x:width*(5/3), y:-200, w:48, h:48}
-moeda[2] = {sx:64, sy:0, sw:64, sh:64, x:width*(6/3), y:-200, w:48, h:48}
-
-function alocarMoeda (){
-    for(let i=0; i<moeda.length; i++){
-        if(moeda[i].x < -200){
-            moeda[i].x = width;
-            let espacoLivre;
-            do{
-                espacoLivre = true;
-                moeda[i].y = ale(0, 1200 - moeda[i].h);
-                if(!colisao(moeda[i].x, moeda[i].y, moeda[i].w, moeda[i].h, 1)){
-                    espacoLivre = false;
-                }
-            }while(!espacoLivre);
-        }    
-        moeda[i].x -= velocidade;
-    }
-}
-
-function colisaoMoeda(x, y, w, h){
-    for(let i=0; i<moeda.length; i++){
-        if((x + w >= moeda[i].x)
-            &&(x <= moeda[i].x + moeda[i].w)
-            &&(y + h >= moeda[i].y)
-            &&(y <= moeda[i].y + moeda[i].h)){
-            let som = ale(0, 1);
-            if(som == 0){
-                moedaSom.play();
+let menu = true;
+function loopMenu(){
+    if(Date.now() - tempo >= (1000/60)){
+        frame++;
+        if(frame == 3){
+            frame = 0;
+            framePeixe++;
+            if(framePeixe == 7){
+                framePeixe = 0;
             }
-            else{
-                moeda2Som.play();
-            }
-            moeda[i].y = -200;
-            quantidadeMoeda++;
-            console.log("MOEDAS = "+quantidadeMoeda);
         }
+        carregarBackground();
+        carregarMenu();
+        carregarBackground2();
+        tempo = Date.now();
+    }
+    if(menu){
+        requestAnimationFrame(loopMenu);
     }
 }
-
-function carregarMoeda (){
-    for(let i=0; i<moeda.length; i++){
-        ctx.drawImage(moedaImg, moeda[i].sx, moeda[i].sy, moeda[i].sw, moeda[i].sh, moeda[i].x, moeda[i].y, moeda[i].w, moeda[i].h); 
-    }
-}loop();
+async function carregarImagens(){
+    await Promise.all(
+        Array.from(document.images).map(
+            (image) =>
+                new Promise((resolve) => image.addEventListener("load",resolve))
+        )
+    );
+    loopMenu();
+}
 
 //-----------------------------------------------------------------------------------------------//
-
-//tela
-
-var tela = false;
-function ajusteTela (){
-    if(screen.orientation.type == "portrait-primary" || screen.orientation.type == "portrait-secondary"){
-        screen.orientation.lock("landscape-primary");
-    }
-    canvas.requestFullscreen();
-}
 
 //colisão
 
 function colisao(){
+    canvas.requestFullscreen();
     for(var n = 0; n<numeroBarreiras; n++){
         //if((peixeHitbox.x+peixeHitbox.w >= barreiras[n].x)
         //&&(peixeHitbox.x <= barreiras[n].x+barreiras[n].w)
@@ -636,6 +515,12 @@ function movimento(){
     }
     else if(peixeHitbox.y+peixeHitbox.h<height){
         peixe.y += gravidade; 
+    }
+    if(keys.w.pressed || keys.s.pressed){
+        if(!tela){
+            ajusteTela();
+            tela = true;
+        }
     }
 }
 
@@ -699,15 +584,6 @@ window.addEventListener("keydown", (evt)=>{
     }
 });
 
-botaoUp.addEventListener("touchstart", (evt)=>{
-    keys.w.pressed = true;
-    keys.s.pressed = false;
-});
-botaoDown.addEventListener("touchstart", (evt)=>{
-    keys.s.pressed = true;
-    keys.w.pressed = false;
-});
-
 window.addEventListener("keyup", (evt)=>{
     if(evt.key){
         if(evt.key=="ArrowUp" || evt.key=='w'){
@@ -717,11 +593,4 @@ window.addEventListener("keyup", (evt)=>{
             keys.s.pressed = false;
         }
     }
-});
-
-botaoUp.addEventListener("touchend", (evt)=>{
-    keys.w.pressed = false;
-});
-botaoDown.addEventListener("touchend", (evt)=>{
-    keys.s.pressed = false;
 });
