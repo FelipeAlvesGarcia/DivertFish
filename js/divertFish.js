@@ -129,7 +129,9 @@ function loopGame(){
         if(vidaStatus){
             ctx.clearRect(0, 0, width, height)
             peixe.frame = frame(peixe.frame, peixe.maxFrame);
-            powerUps.frame = frame(powerUps.frame, powerUps.maxFrame);
+            for(let i=0; i<powerUps.length; i++){
+                powerUps[i].frame = frame(powerUps[i].frame, powerUps[i].maxFrame);
+            }
             for (let m=0; m<moeda.length; m++){
                 moeda[m].frame = frame(moeda[m].frame, moeda[m].maxFrame);
             }
@@ -301,10 +303,14 @@ jogar.addEventListener("click", ()=>{
     quantidadePontos = 0;
     menuPoderes.quantidade[0] = 1; 
     menuPoderes.quantidade[1] = 3;
-    powerUps.y += height;
     for(let i=0; i<moeda.length; i++){
         moeda[i].y += height;
     }
+    for(let i=0; i<powerUps.length; i++){
+        powerUps[i].y += height;
+        powerUps[i].tempoPower = 200 * (i);
+    }
+    tiro.y += height;
     velocidade = 14;
     nivel = 1;
     chance = true;
@@ -696,15 +702,16 @@ let powerUpAtributos = {
     dobroVelocidadeStatus : false,
 }
 
-let powerUps = []
-powerUps[0] = {sx:64, sy:0, sw:64, sh:64, x:-width, y:0, w:48, h:48, tipo:ale(0, 5), frame:0, maxFrame:7, tempoPowerPassado: ale(minTempoPower, maxTempoPower), tempoPower : tempoPowerPassado + quantidadePontos}
-powerUps[1] = {sx:64, sy:0, sw:64, sh:64, x:-width, y:0, w:48, h:48, tipo:ale(0, 5), frame:0, maxFrame:7, tempoPowerPassado: ale(minTempoPower, maxTempoPower), tempoPower : tempoPowerPassado + quantidadePontos}
-powerUps[2] = {sx:64, sy:0, sw:64, sh:64, x:-width, y:0, w:48, h:48, tipo:ale(0, 5), frame:0, maxFrame:7, tempoPowerPassado: ale(minTempoPower, maxTempoPower), tempoPower : tempoPowerPassado + quantidadePontos}
-
 let minTempoPower = 200;
 let maxTempoPower = 400;
+let powerUps = []
+powerUps[0] = {sx:64, sy:0, sw:64, sh:64, x:-width, y:0, w:48, h:48, tipo:ale(0, 5), frame:0, maxFrame:7, tempoPowerPassado: ale(minTempoPower, maxTempoPower), tempoPower : 0 + quantidadePontos}
+powerUps[1] = {sx:64, sy:0, sw:64, sh:64, x:-width, y:0, w:48, h:48, tipo:ale(0, 5), frame:0, maxFrame:7, tempoPowerPassado: ale(minTempoPower, maxTempoPower), tempoPower : 200 + quantidadePontos}
+powerUps[2] = {sx:64, sy:0, sw:64, sh:64, x:-width, y:0, w:48, h:48, tipo:ale(0, 5), frame:0, maxFrame:7, tempoPowerPassado: ale(minTempoPower, maxTempoPower), tempoPower : 400 + quantidadePontos}
+
+
 function alocarPowerUp (){
-    for(let i=0; i<powerUps[i].length; i++){
+    for(let i=0; i<powerUps.length; i++){
         powerUps[i].x -= velocidade;
         if(powerUps[i].tempoPower <= quantidadePontos){
             powerUps[i].tempoPowerPassado = (maxTempoPower-powerUps[i].tempoPowerPassado) + ale(minTempoPower, maxTempoPower);
@@ -725,46 +732,51 @@ function alocarPowerUp (){
 }
 
 function colisaoPowerUp(x, y, w, h){
-    if((x + w >= powerUps.x)
-    &&(x <= powerUps.x + powerUps.w)
-    &&(y + h >= powerUps.y)
-    &&(y <= powerUps.y + powerUps.h)){
-        powerUps.x -= width;
-        if(powerUps.tipo == 0){
-            powerUpSom.play();
-            if(coracao.frame > 0)
-                coracao.frame -= 2;
-        }
-        else if(powerUps.tipo == 1){
-            powerUpSom.play();
-            menuPoderes.quantidade[0]++;   
-        }
-        else if(powerUps.tipo == 2){
-            powerUpSom.play();
-            powerUpAtributos.dobroPonto = Date.now();
-            powerUpAtributos.dobroPontoStatus = true;
-        }
-        else if(powerUps.tipo == 3){
-            powerUpSom.play();
-            powerUpAtributos.dobroVelocidade = Date.now();
-            powerUpAtributos.dobroVelocidadeStatus = true;
-        }
-        else if(powerUps.tipo == 4){
-            superPowerUpSom.play();
-            for(let i=0; i<barreiras.length; i++){
-                barreiras[i].y = -height;
+    for(let i=0; i<powerUps.length; i++){
+        if((x + w >= powerUps[i].x)
+        &&(x <= powerUps[i].x + powerUps[i].w)
+        &&(y + h >= powerUps[i].y)
+        &&(y <= powerUps[i].y + powerUps[i].h)){
+            powerUps[i].x -= width;
+            if(powerUps[i].tipo == 0){
+                powerUpSom.play();
+                if(coracao.frame > 0)
+                    coracao.frame -= 2;
             }
-        }
-        else if(powerUps.tipo == 5){
-            powerUpSom.play();
-            menuPoderes.quantidade[1] += 2;
-        }
+            else if(powerUps[i].tipo == 1){
+                powerUpSom.play();
+                menuPoderes.quantidade[0]++;   
+            }
+            else if(powerUps[i].tipo == 2){
+                powerUpSom.play();
+                powerUpAtributos.dobroPonto = Date.now();
+                powerUpAtributos.dobroPontoStatus = true;
+            }
+            else if(powerUps[i].tipo == 3){
+                powerUpSom.play();
+                powerUpAtributos.dobroVelocidade = Date.now();
+                powerUpAtributos.dobroVelocidadeStatus = true;
+            }
+            else if(powerUps[i].tipo == 4){
+                superPowerUpSom.play();
+                for(let i=0; i<barreiras.length; i++){
+                    barreiras[i].y = -height;
+                }
+            }
+            else if(powerUps[i].tipo == 5){
+                powerUpSom.play();
+                menuPoderes.quantidade[1] += 2;
+            }
+        }    
     }
+    
 }
 
 function carregarPowerUp (){
-    powerUps.sx = 64 * powerUps.frame;
-    ctx.drawImage(powerUpImg, powerUps.sx, powerUps.sy, powerUps.sw, powerUps.sh, powerUps.x, powerUps.y, powerUps.w, powerUps.h);
+    for(let i=0; i<powerUps.length; i++){
+        powerUps[i].sx = 64 * powerUps[i].frame;
+        ctx.drawImage(powerUpImg, powerUps[i].sx, powerUps[i].sy, powerUps[i].sw, powerUps[i].sh, powerUps[i].x, powerUps[i].y, powerUps[i].w, powerUps[i].h);    
+    }
 }
 
 //Moeda
