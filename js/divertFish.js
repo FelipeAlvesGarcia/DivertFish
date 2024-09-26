@@ -4,6 +4,7 @@ let width = 2400;
 let height = 1200;
 canvas.width = width;
 canvas.height = height;
+let divMain = document.querySelector('main');
 
 //Audios
 
@@ -43,6 +44,88 @@ let moedaImg = new Image();
 moedaImg.src = "imgDivertFish/moeda.png";
 
 //-----------------------------------------------------------------------------------------------//
+
+//celular
+
+let Xc = 500;
+let Yc = 500;
+let Xn = Xc;
+let Yn = Yc;
+let raioCentro = 50;
+let raio = 300;
+
+divMain.addEventListener('touchstart', (event) =>{
+    Xn = event.touches[0].clientX;
+    Yn = event.touches[0].clientY;
+    //console.log("\nSX -> "+startDedoX);
+    //console.log("SY -> "+startDedoY);
+});
+
+divMain.addEventListener('touchmove', (event) =>{
+    Xn = event.changedTouches[0].clientX;
+    Yn = event.changedTouches[0].clientY;
+    console.log("MEX -> "+Xn);
+    console.log("MEY -> "+Yn);
+    if(((Xc - Xn)*(Xc - Xn)) + ((Yc - Yn)*(Yc - Yn)) <= raio*raio){
+        direcaoCelular();
+    }
+});
+
+divMain.addEventListener('touchend', (event) =>{
+    Xn = Xc;
+    Yn = Yc;
+    direcaoCelular();
+});
+
+const minimoDeslocamento = raioCentro;
+let deltaX, deltaY;
+let a;
+function direcaoCelular(){
+    ctx.fillStyle = "rgba(0,0,0, 0.7)";
+    ctx.fillRect(Xn-(raioCentro/2), Yn-(raioCentro/2), raioCentro, raioCentro);
+
+
+    /*deltaX = Xn - Xc;
+    deltaY = Yn - Yc;
+    deltaY = -1*deltaY;
+    //console.log("DX = "+deltaX);
+    //console.log("DY = "+deltaY);
+    if((deltaX >= minimoDeslocamento || deltaX <= -minimoDeslocamento) || (deltaY >= minimoDeslocamento || deltaY <= -minimoDeslocamento)){
+        // SX SY 1 SX SY
+        // EX EY 1 EX EY
+        // X  Y  1 X  Y 
+        a = deltaY / deltaX;
+        //console.log("a = "+a)
+        if(deltaX == 0 || deltaY == 0){
+            if(deltaX == 0){
+                if(deltaY > 0){if(direcao!=3){direcao=1}} else{if(direcao!=1){direcao=3}};
+            }
+            else if(deltaY == 0){
+                if(deltaX > 0){if(direcao!=2){direcao=4}} else{if(direcao!=4){direcao=2}};
+            }    
+        }
+        else{
+            if(a > 0.4040 && a <= 4.3315){
+                //console.log("eixo +XY");
+                if(deltaY > 0){if(direcao!=7){direcao=5;velocidade=1}} else{if(direcao!=5){direcao=7;velocidade=1}};
+            }
+            else if(a < -0.4040 && a >= -4.3315){
+                //console.log("eixo -XY");
+                if(deltaY > 0){if(direcao!=8){direcao=6;velocidade=1}} else{if(direcao!=6){direcao=8;velocidade=1}};
+            }
+            else if(a <= 0.4040 && a >= -0.4040){
+                //console.log("eixo X");
+                if(deltaX > 0){if(direcao!=2){direcao=4;velocidade=0.65}} else{if(direcao!=4){direcao=2;velocidade=0.65}};
+            }
+            else if(a > 4.3315 || a < -4.3315){
+                //console.log("eixo Y");
+                if(deltaY > 0){if(direcao!=3){direcao=1;velocidade=0.65}} else{if(direcao!=1 && direcao!=0){direcao=3;velocidade=0.65}};
+            }   
+        }
+    }
+    //console.log(direcao);
+    //console.log(velocidade);*/
+}
 
 //teclas
 
@@ -156,6 +239,7 @@ function loopGame(){
             carregarCoracao();
             carregarMenuPoderes();
             
+            direcaoCelular();
             colisao(peixeHitbox.x, peixeHitbox.y, peixeHitbox.w, peixeHitbox.h, 0);
             colisaoPowerUp(peixeHitbox.x, peixeHitbox.y, peixeHitbox.w, peixeHitbox.h);
             colisaoMoeda(peixeHitbox.x, peixeHitbox.y, peixeHitbox.w, peixeHitbox.h);
@@ -219,6 +303,8 @@ let comecou = false;
 botaoUp.addEventListener("click", ()=>{
     if(!comecou){
         opcoesMenu.style.display = "block";
+        botaoUp.style.display = "none";
+        botaoDown.style.display = "none";
         comecou = true;
         musicaAberturaSom.play();
         loopMenu();
@@ -834,12 +920,11 @@ function carregarMoeda (){
 
 //tela
 
-let main = document.querySelector('main');
 function ajusteTela (){
     /*if(screen.orientation.type == "portrait-primary" || screen.orientation.type == "portrait-secondary"){
         screen.orientation.lock("landscape-primary");
     }*/
-    main.requestFullscreen();
+    divMain.requestFullscreen();
 }
 
 //gameOver
