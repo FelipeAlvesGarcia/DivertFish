@@ -30,7 +30,14 @@ main{
     height: 50vh;
 }
 
-
+#joyStick{
+    width: 100px;
+    height:100px;
+    position: absolute;
+    bottom:5%;
+    left:5%;
+    opacity: 0.75;
+}
 
 #menu{
     position: absolute;

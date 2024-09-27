@@ -47,45 +47,67 @@ moedaImg.src = "imgDivertFish/moeda.png";
 
 //celular
 
-let Xc = 500;
-let Yc = 500;
+const joyStick = document.querySelector("#joyStick");
+let ctxJ = joyStick.getContext("2d");
+let widthJ = 100;
+let heightJ = 100;
+joyStick.width = widthJ;
+joyStick.height = heightJ;
+
+let Xc = widthJ/2;
+let Yc = heightJ/2;
 let Xn = Xc;
 let Yn = Yc;
-let raioCentro = 50;
-let raio = 300;
+let raioCentro = 10;
+let raio = 50;
 
-divMain.addEventListener('touchstart', (event) =>{
-    Xn = event.touches[0].clientX;
-    Yn = event.touches[0].clientY;
-    //console.log("\nSX -> "+startDedoX);
-    //console.log("SY -> "+startDedoY);
+joyStick.addEventListener('touchstart', (event) =>{
+    const rect = joyStick.getBoundingClientRect();
+    Xn = event.touches[0].clientX - rect.left;
+    Yn = event.touches[0].clientY - rect.top;
+    //console.log("\nSX -> "+rect.left);
+    //console.log("SY -> "+rect.top);
+    direcaoCelular();
 });
 
-divMain.addEventListener('touchmove', (event) =>{
-    Xn = event.changedTouches[0].clientX;
-    Yn = event.changedTouches[0].clientY;
-    console.log("MEX -> "+Xn);
-    console.log("MEY -> "+Yn);
-    if(((Xc - Xn)*(Xc - Xn)) + ((Yc - Yn)*(Yc - Yn)) <= raio*raio){
-        direcaoCelular();
+joyStick.addEventListener('touchmove', (event) =>{  
+    const rect = joyStick.getBoundingClientRect();
+    let auxX = Xn;
+    let auxY = Yn;
+    Xn = event.changedTouches[0].clientX - rect.left;
+    Yn = event.changedTouches[0].clientY - rect.top;
+    if(((Xc - Xn)*(Xc - Xn)) + ((Yc - Yn)*(Yc - Yn)) > (raio-raioCentro)*(raio-raioCentro)){
+        const angle = Math.atan2(Yn - heightJ / 2, Xn - widthJ / 2);
+        Xn = widthJ / 2 + Math.cos(angle) * (raio-raioCentro);
+        Yn = heightJ / 2 + Math.sin(angle) * (raio-raioCentro);
     }
+    direcaoCelular();
 });
 
-divMain.addEventListener('touchend', (event) =>{
+joyStick.addEventListener('touchend', (event) =>{
     Xn = Xc;
     Yn = Yc;
     direcaoCelular();
 });
 
+function controle (){
+    //base
+    ctxJ.beginPath();
+    ctxJ.arc(Xc, Yc, raio, 0, Math.PI * 2);
+    ctxJ.fillStyle = 'rgba(100,100,100, 1)';
+    ctxJ.fill();
+    //joystick
+    ctxJ.beginPath();
+    ctxJ.arc(Xn, Yn, raioCentro, 0, Math.PI * 2);
+    ctxJ.fillStyle = 'rgba(50,50,50, 1)';
+    ctxJ.fill();
+}
+
 const minimoDeslocamento = raioCentro;
 let deltaX, deltaY;
 let a;
 function direcaoCelular(){
-    ctx.fillStyle = "rgba(0,0,0, 0.7)";
-    ctx.fillRect(Xn-(raioCentro/2), Yn-(raioCentro/2), raioCentro, raioCentro);
-
-
-    /*deltaX = Xn - Xc;
+    deltaX = Xn - Xc;
     deltaY = Yn - Yc;
     deltaY = -1*deltaY;
     //console.log("DX = "+deltaX);
@@ -96,32 +118,42 @@ function direcaoCelular(){
         // X  Y  1 X  Y 
         a = deltaY / deltaX;
         //console.log("a = "+a)
+        keys.d.pressed = false;
+        keys.a.pressed = false;
+        keys.w.pressed = false;
+        keys.s.pressed = false;
         if(deltaX == 0 || deltaY == 0){
             if(deltaX == 0){
-                if(deltaY > 0){if(direcao!=3){direcao=1}} else{if(direcao!=1){direcao=3}};
+                if(deltaY > 0){keys.w.pressed = true} else{keys.s.pressed = true};
             }
             else if(deltaY == 0){
-                if(deltaX > 0){if(direcao!=2){direcao=4}} else{if(direcao!=4){direcao=2}};
+                if(deltaX > 0){keys.a.pressed = true} else{keys.d.pressed = true};
             }    
         }
         else{
             if(a > 0.4040 && a <= 4.3315){
                 //console.log("eixo +XY");
-                if(deltaY > 0){if(direcao!=7){direcao=5;velocidade=1}} else{if(direcao!=5){direcao=7;velocidade=1}};
+                if(deltaY > 0){keys.w.pressed = true; keys.d.pressed = true} else{keys.s.pressed = true; keys.a.pressed = true};
             }
             else if(a < -0.4040 && a >= -4.3315){
                 //console.log("eixo -XY");
-                if(deltaY > 0){if(direcao!=8){direcao=6;velocidade=1}} else{if(direcao!=6){direcao=8;velocidade=1}};
+                if(deltaY > 0){keys.w.pressed = true; keys.a.pressed = true} else{keys.s.pressed = true; keys.d.pressed = true};
             }
             else if(a <= 0.4040 && a >= -0.4040){
                 //console.log("eixo X");
-                if(deltaX > 0){if(direcao!=2){direcao=4;velocidade=0.65}} else{if(direcao!=4){direcao=2;velocidade=0.65}};
+                if(deltaX > 0){keys.d.pressed = true} else{keys.a.pressed = true};
             }
             else if(a > 4.3315 || a < -4.3315){
                 //console.log("eixo Y");
-                if(deltaY > 0){if(direcao!=3){direcao=1;velocidade=0.65}} else{if(direcao!=1 && direcao!=0){direcao=3;velocidade=0.65}};
+                if(deltaY > 0){keys.w.pressed = true} else{keys.s.pressed = true};
             }   
         }
+    }
+    else{
+        keys.d.pressed = false;
+        keys.a.pressed = false;
+        keys.w.pressed = false;
+        keys.s.pressed = false;
     }
     //console.log(direcao);
     //console.log(velocidade);*/
@@ -238,8 +270,8 @@ function loopGame(){
             carregarPontos();
             carregarCoracao();
             carregarMenuPoderes();
-            
-            direcaoCelular();
+            controle();
+
             colisao(peixeHitbox.x, peixeHitbox.y, peixeHitbox.w, peixeHitbox.h, 0);
             colisaoPowerUp(peixeHitbox.x, peixeHitbox.y, peixeHitbox.w, peixeHitbox.h);
             colisaoMoeda(peixeHitbox.x, peixeHitbox.y, peixeHitbox.w, peixeHitbox.h);
@@ -713,7 +745,7 @@ let menuPoderes = {
     sy:0,
     sw:144,
     sh:144,
-    x:32,
+    x:width-80,
     y:[],
     w:32,
     h:32,

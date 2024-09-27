@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Joystick em Canvas</title>
+    <style>
+        canvas {
+            background-color: #eee;
+            display: block;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="joystickCanvas" width="300" height="300"></canvas>
+
+    <script>
+        const canvas = document.getElementById('joystickCanvas');
+        const ctx = canvas.getContext('2d');
+
+        const joystickRadius = 100;
+        const knobRadius = 30;
+        let knobX = canvas.width / 2;
+        let knobY = canvas.height / 2;
+        let dragging = false;
+
+        function drawJoystick() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Desenha o círculo base do joystick
+            ctx.beginPath();
+            ctx.arc(canvas.width / 2, canvas.height / 2, joystickRadius, 0, Math.PI * 2);
+            ctx.fillStyle = '#ccc';
+            ctx.fill();
+            ctx.stroke();
+
+            // Desenha o botão do joystick (knob)
+            ctx.beginPath();
+            ctx.arc(knobX, knobY, knobRadius, 0, Math.PI * 2);
+            ctx.fillStyle = '#888';
+            ctx.fill();
+            ctx.stroke();
+        }
+
+        function getMousePos(event) {
+            const rect = canvas.getBoundingClientRect();
+            return {
+                x: event.clientX - rect.left,
+                y: event.clientY - rect.top
+            };
+        }
+
+        function distance(x1, y1, x2, y2) {
+            return Math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2);
+        }
+
+        function onMouseDown(event) {
+            const pos = getMousePos(event);
+            if (distance(pos.x, pos.y, knobX, knobY) <= knobRadius) {
+                dragging = true;
+            }
+        }
+
+        function onMouseMove(event) {
+            if (dragging) {
+                const pos = getMousePos(event);
+                const dist = distance(pos.x, pos.y, canvas.width / 2, canvas.height / 2);
+
+                if (dist <= joystickRadius) {
+                    knobX = pos.x;
+                    knobY = pos.y;
+                } else {
+                    const angle = Math.atan2(pos.y - canvas.height / 2, pos.x - canvas.width / 2);
+                    knobX = canvas.width / 2 + Math.cos(angle) * joystickRadius;
+                    knobY = canvas.height / 2 + Math.sin(angle) * joystickRadius;
+                }
+                drawJoystick();
+            }
+        }
+
+        function onMouseUp() {
+            dragging = false;
+
+            // Retorna o botão (knob) para o centro
+            knobX = canvas.width / 2;
+            knobY = canvas.height / 2;
+            drawJoystick();
+        }
+
+        canvas.addEventListener('mousedown', onMouseDown);
+        canvas.addEventListener('mousemove', onMouseMove);
+        canvas.addEventListener('mouseup', onMouseUp);
+        canvas.addEventListener('mouseleave', onMouseUp);
+
+        drawJoystick();
+    </script>
+</body>
+</html>
