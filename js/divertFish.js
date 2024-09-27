@@ -49,8 +49,8 @@ moedaImg.src = "imgDivertFish/moeda.png";
 
 const joyStick = document.querySelector("#joyStick");
 let ctxJ = joyStick.getContext("2d");
-let widthJ = 100;
-let heightJ = 100;
+let widthJ = 120;
+let heightJ = 120;
 joyStick.width = widthJ;
 joyStick.height = heightJ;
 
@@ -58,8 +58,8 @@ let Xc = widthJ/2;
 let Yc = heightJ/2;
 let Xn = Xc;
 let Yn = Yc;
-let raioCentro = 10;
-let raio = 50;
+let raioCentro = 20;
+let raio = 60;
 
 joyStick.addEventListener('touchstart', (event) =>{
     const rect = joyStick.getBoundingClientRect();
@@ -767,6 +767,14 @@ function carregarMenuPoderes (){
 }
 
 //
+let celularBolhaProtecao = document.querySelector("#bolhaProtecao");
+celularBolhaProtecao.addEventListener("click", ()=>{
+    if(!bolha.status && menuPoderes.quantidade[0] > 0){
+        bolha.tempo = Date.now();
+        bolha.status = true;
+        menuPoderes.quantidade[0]--;
+    }
+});
 
 window.addEventListener("keydown", (evt)=>{
     if(!bolha.status &&  evt.key == 'b' && menuPoderes.quantidade[0] > 0){
@@ -799,6 +807,16 @@ function tiroBolha (){
     }
     ctx.drawImage(bolhaImg, tiro.sx, tiro.sy, tiro.sw, tiro.sh, tiro.x, tiro.y, tiro.w, tiro.h);
 }
+
+let celularBolhaAtaque = document.querySelector("#bolhaAtaque");
+celularBolhaAtaque.addEventListener("click", ()=>{
+    if(!tiro.status && menuPoderes.quantidade[1] > 0){
+        menuPoderes.quantidade[1]--;
+        tiro.x = peixeHitbox.x+peixeHitbox.w;
+        tiro.y = peixeHitbox.y+((peixeHitbox.h-tiro.h)/2);
+        tiro.status = true;
+    }
+});
 
 window.addEventListener("keydown", (evt)=>{
     if(!tiro.status && evt.key == 'v' && menuPoderes.quantidade[1] > 0){
