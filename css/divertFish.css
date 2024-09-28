@@ -3,10 +3,15 @@
     padding:0;
 }
 body{
-    background-color: rgb(22, 22, 22);
+    /*background-color: rgb(22, 22, 22);**/
+    background-color: #5917E9;
 }
 main{
     position:relative;
+    width:100vw;
+    height: 100vh;
+    overflow-x: hidden;
+    overflow-y: auto;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -14,22 +19,42 @@ main{
 #tela{
     width:90vw;
     /*margin-left:calc((100vw - (98vmin*(2/3)))/2);*/
+    border:5px solid white;
+    background-color: black;
+    border-radius: 25px;
 }
-#bo1{
+#botaoComecar{
     position: absolute;
-    left:0;
-    top:0;
-    width:100vw;
-    height: 50vh;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background:none;
 }
-#bo2{
-    position: absolute;
-    left:0;
-    top:50vh;
-    width:100vw;
-    height: 50vh;
+#botaoComecar > p{
+    color: white;
+    font-size: 2rem;
+    font-family: arial;
+    font-weight: bold;
+    text-shadow: 0 0 20px white;
+    transition: 200ms ease-in-out;
+    background-color: red;
+    box-shadow: 0 0 100px red;
+    border-radius: 100px;
+    margin:0;
+    padding-top:0.75rem;
+    padding-bottom: 0.75rem;
+    padding-left: 4.5rem;
+    padding-right: 4.5rem;
+    cursor: pointer;
+    border:2px solid white;
+    opacity: 0.75;
 }
-
+#botaoComecar > p:hover{
+    opacity: 1;
+    transform: scale(1.1);  
+}
 
 
 #joyStick{
@@ -43,7 +68,7 @@ main{
 #poderes{
     position: absolute;
     width: 160px;
-    display: flex;
+    display: none;
     justify-content: space-between;
     right:10%;
     bottom: 10%;
@@ -104,6 +129,7 @@ main{
     transition: 200ms;
 }
 .opcao{
+    display:block;
     width:5vw;
     height: 5vw;
     margin: 1vw;
@@ -113,6 +139,7 @@ main{
 .opcao > img{
     height:5vw;
     position: absolute;
+    border-radius: 50%;
 }
 .bgOpcaoPrincipal{
     width:10vw;
@@ -150,13 +177,31 @@ main{
 
 
 
+#teclasImg{
+    position: absolute;
+    height:90vh;
+    width:auto;
+    top: 5vh;
+    left:calc(-45vh - 8px);
+    transition: 350ms ease-in-out;
+    border-top-right-radius: 30px;
+    border-bottom-right-radius: 30px;
+    border: 2px white solid;
+    box-shadow: 0 0 20px black;
+}
+
+
+
 #pergunta{
     display:none;
     position:absolute;
     width:100%;
+    height:100%;
     flex-direction:column;
     flex-wrap:wrap;
     align-items: center;
+    justify-content: center;
+    background-color: rgba(0,0,0,0.5);
 }
 #pergunta > h2{
     padding: 1vw;

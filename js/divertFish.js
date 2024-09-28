@@ -53,6 +53,7 @@ let widthJ = 120;
 let heightJ = 120;
 joyStick.width = widthJ;
 joyStick.height = heightJ;
+let joystickStatus = false;
 
 let Xc = widthJ/2;
 let Yc = heightJ/2;
@@ -91,6 +92,7 @@ joyStick.addEventListener('touchend', (event) =>{
 });
 
 function controle (){
+    ctxJ.clearRect(0, 0, widthJ, heightJ);
     //base
     ctxJ.beginPath();
     ctxJ.arc(Xc, Yc, raio, 0, Math.PI * 2);
@@ -161,9 +163,6 @@ function direcaoCelular(){
 
 //teclas
 
-let botaoUp = document.querySelector("#bo1");
-let botaoDown = document.querySelector("#bo2");
-
 let keys = {
     w:{
         pressed:false,
@@ -200,15 +199,6 @@ window.addEventListener("keydown", (evt)=>{
     }
 });
 
-botaoUp.addEventListener("touchstart", (evt)=>{
-    keys.w.pressed = true;
-    keys.s.pressed = false;
-});
-botaoDown.addEventListener("touchstart", (evt)=>{
-    keys.s.pressed = true;
-    keys.w.pressed = false;
-});
-
 window.addEventListener("keyup", (evt)=>{
     if(evt.key){
         if(evt.key=="ArrowRight" || evt.key=='d'){
@@ -224,13 +214,6 @@ window.addEventListener("keyup", (evt)=>{
             keys.s.pressed = false;
         }
     }
-});
-
-botaoUp.addEventListener("touchend", (evt)=>{
-    keys.w.pressed = false;
-});
-botaoDown.addEventListener("touchend", (evt)=>{
-    keys.s.pressed = false;
 });
 
 //-----------------------------------------------------------------------------------------------//
@@ -270,7 +253,7 @@ function loopGame(){
             carregarPontos();
             carregarCoracao();
             carregarMenuPoderes();
-            controle();
+            if(joystickStatus){controle()}
 
             colisao(peixeHitbox.x, peixeHitbox.y, peixeHitbox.w, peixeHitbox.h, 0);
             colisaoPowerUp(peixeHitbox.x, peixeHitbox.y, peixeHitbox.w, peixeHitbox.h);
@@ -331,12 +314,12 @@ function frame (frame, maxFrame){
 
 //Começar
 
+let botaoComecar = document.getElementById("botaoComecar");
 let comecou = false;
-botaoUp.addEventListener("click", ()=>{
+botaoComecar.addEventListener("click", ()=>{
     if(!comecou){
         opcoesMenu.style.display = "block";
-        botaoUp.style.display = "none";
-        botaoDown.style.display = "none";
+        botaoComecar.style.display = "none";
         comecou = true;
         musicaAberturaSom.play();
         loopMenu();
@@ -402,6 +385,7 @@ function carregarMenu(){
 const jogar = document.getElementById("jogar");
 const opcoesMenu = document.getElementById("menu");
 jogar.addEventListener("click", ()=>{
+    teclasImg.style.transform = `translatex(0px)`;
     ajusteTela();
     tela = true;   
     opcoesMenu.style.display = "none";
@@ -434,6 +418,21 @@ jogar.addEventListener("click", ()=>{
     chance = true;
     jogo = true;
     loopGame();
+});
+
+//
+
+let teclasMostrar = document.querySelector("#teclas");
+let teclasImg = document.querySelector("#teclasImg");
+let teclasImgStatus = false;
+teclasMostrar.addEventListener("click", ()=>{
+    let aux = window.innerHeight / 100 * 45 + 8;
+    if(teclasImgStatus){
+        aux = 0;
+    };
+    teclasImg.style.transform = `translatex(${aux}px)`;
+    (teclasImgStatus) ? teclasImgStatus = false : teclasImgStatus = true;
+
 });
 
 //Background
@@ -970,10 +969,15 @@ function carregarMoeda (){
 
 //tela
 
+let poderesBotao = document.querySelector("#poderes");
 function ajusteTela (){
     /*if(screen.orientation.type == "portrait-primary" || screen.orientation.type == "portrait-secondary"){
         screen.orientation.lock("landscape-primary");
     }*/
+    if(window.innerWidth < 1100){
+        poderesBotao.style.display = "flex";
+        joystickStatus = true;
+    }
     divMain.requestFullscreen();
 }
 
@@ -997,6 +1001,7 @@ let alternativas = {
 chance = true;
 
 function gameOver (){
+    ctxJ.clearRect(0, 0, widthJ, heightJ);
     pergunta.style.display = "flex";
     lixoPerguntaImg.style.transform = "translateX(calc("+ultimaBarreira+" * -12vw))";
     if(ultimaBarreira == 0){
