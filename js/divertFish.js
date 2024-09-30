@@ -274,10 +274,12 @@ let menu = true;
 function loopMenu(){
     if(Date.now() - tempoJogo >= (1000/60) && menu){
         peixe.frame = frame(peixe.frame, peixe.maxFrame);
+        moeda[1].frame = frame(moeda[1].frame, moeda[1].maxFrame);
         carregarBackground();
         carregarChao();
         carregarMenu();
         carregarBackground2();
+        carregarMenuMoeda();
         tempoJogo = Date.now();
     }
     if(menu){
@@ -384,8 +386,15 @@ function carregarMenu(){
 
 const jogar = document.getElementById("jogar");
 const opcoesMenu = document.getElementById("menu");
-jogar.addEventListener("click", ()=>{
+function iniciarJogo(){
+    if(joystickStatus)
+        poderesBotao.style.display = "block";
+    teclasImgStatus = false;
     teclasImg.style.transform = `translatex(0px)`;
+    lojaStatus = false;
+    loja.style.transform = `translatey(0px)`;
+    ctxJ.clearRect(0, 0, widthJ, heightJ);
+    
     ajusteTela();
     tela = true;   
     opcoesMenu.style.display = "none";
@@ -418,14 +427,17 @@ jogar.addEventListener("click", ()=>{
     chance = true;
     jogo = true;
     loopGame();
-});
+}
+jogar.addEventListener("click", iniciarJogo);
 
 //
 
 let teclasMostrar = document.querySelector("#teclas");
-let teclasImg = document.querySelector("#teclasImg");
+let teclasImg = document.querySelector("#teclasImg");  
 let teclasImgStatus = false;
 teclasMostrar.addEventListener("click", ()=>{
+    lojaStatus = false;
+    loja.style.transform = `translatey(0px)`;
     let aux = window.innerHeight / 100 * 45 + 8;
     if(teclasImgStatus){
         aux = 0;
@@ -433,6 +445,22 @@ teclasMostrar.addEventListener("click", ()=>{
     teclasImg.style.transform = `translatex(${aux}px)`;
     (teclasImgStatus) ? teclasImgStatus = false : teclasImgStatus = true;
 
+});
+
+//
+
+let lojaBotao = document.querySelector("#lojaBotao");
+let loja = document.querySelector("#loja");
+let lojaStatus = false;
+lojaBotao.addEventListener("click", ()=>{
+    teclasImgStatus = false;
+    teclasImg.style.transform = `translatex(0px)`;
+    let aux = window.innerWidth / 100 * 40 + 4;
+    if(lojaStatus){
+        aux = 0;
+    };
+    loja.style.transform = `translatey(${-aux}px)`;
+    (lojaStatus) ? lojaStatus = false : lojaStatus = true;
 });
 
 //Background
@@ -696,7 +724,7 @@ function colisao(x, y, w, h, tipo){
 
 let quantidadePontos = 0;
 let pontos = {
-    nx:16,
+    nx:32,
     ny:50,
     fonte:"49px serif",
 }
@@ -917,6 +945,7 @@ function carregarPowerUp (){
 //Moeda
 
 let quantidadeMoeda = 0;
+let quantidadeMoedaTotal = 0;
 let moeda = [];
 moeda[0] = {sx:96, sy:0, sw:96, sh:96, x:width*(4/3), y:-200, w:48, h:48, frame:0, maxFrame:6}
 moeda[1] = {sx:96, sy:0, sw:96, sh:96, x:width*(5/3), y:-200, w:48, h:48, frame:2, maxFrame:6}
@@ -967,6 +996,20 @@ function carregarMoeda (){
     }
 }
 
+let menuMoeda = {
+    x:32,
+    y:32,
+    nx:32+moeda[1].w+10,
+    ny:74,
+    fonte:"57px serif",
+}
+function carregarMenuMoeda (){
+    ctx.drawImage(moedaImg, moeda[1].sx*moeda[1].frame, moeda[1].sy, moeda[1].sw, moeda[1].sh, menuMoeda.x, menuMoeda.y, moeda[1].w, moeda[1].h); 
+    ctx.fillStyle = "rgb(255,255,0)";
+    ctx.font = menuMoeda.fonte;
+    ctx.fillText(quantidadeMoedaTotal, menuMoeda.nx, menuMoeda.ny);
+}
+
 //tela
 
 let poderesBotao = document.querySelector("#poderes");
@@ -1001,6 +1044,7 @@ let alternativas = {
 chance = true;
 
 function gameOver (){
+    poderesBotao.style.display = "none";
     ctxJ.clearRect(0, 0, widthJ, heightJ);
     pergunta.style.display = "flex";
     lixoPerguntaImg.style.transform = "translateX(calc("+ultimaBarreira+" * -12vw))";
@@ -1063,12 +1107,41 @@ function finalizarJogo (){
     loopMenu();
 }
 
+let result = document.querySelector("#gameoverResult");
+let jogarNovamente = document.querySelector("#jogarNovamente");
+let voltarHome = document.querySelector("#voltarHome");
+let pontosResult = document.querySelector("#pontosResult");
+let moedasResult = document.querySelector("#moedasResult");
+function resultados (){
+    pontosResult.innerHTML = "Sua pontuação: " + Math.round(quantidadePontos);
+    moedasResult.innerHTML = "Moedas pegas: " + quantidadeMoeda;
+    quantidadeMoedaTotal += quantidadeMoeda;
+    quantidadeMoeda = 0;
+    pergunta.style.display = "none";
+    result.style.display = "flex";
+}
+
+jogarNovamente.addEventListener("click", ()=>{
+    tempoJogo = Date.now();
+    nadar = 10;
+    vidaStatus = true;
+    result.style.display = "none";
+    iniciarJogo();
+});
+
+voltarHome.addEventListener("click", ()=>{
+    result.style.display = "none";
+    finalizarJogo();
+});
+
+
+
 alterA.addEventListener("click", ()=>{
     if(alternativas.a && chance){
         chance = corretaVida();
     }
     else{
-        finalizarJogo();
+        resultados();
     }
 });
 
@@ -1077,7 +1150,7 @@ alterB.addEventListener("click", ()=>{
         chance = corretaVida();
     }
     else{
-        finalizarJogo();
+        resultados();
     }
 });
 
@@ -1086,7 +1159,7 @@ alterC.addEventListener("click", ()=>{
         chance = corretaVida();
     }
     else{
-        finalizarJogo();
+        resultados();
     }
 });
 
@@ -1095,7 +1168,7 @@ alterD.addEventListener("click", ()=>{
         chance = corretaVida();
     }
     else{
-        finalizarJogo();
+        resultados();
     }
 });
 
@@ -1104,7 +1177,7 @@ alterE.addEventListener("click", ()=>{
         chance = corretaVida();
     }
     else{
-        finalizarJogo();
+        resultados();
     }
 });
 
