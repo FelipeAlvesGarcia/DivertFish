@@ -279,6 +279,7 @@ function loopMenu(){
         carregarChao();
         carregarMenu();
         carregarBackground2();
+        carregarMenuPoderes();
         carregarMenuMoeda();
         tempoJogo = Date.now();
     }
@@ -412,8 +413,8 @@ function iniciarJogo(){
     coracao.frame = 0;
     primeirasBarreiras();
     quantidadePontos = 0;
-    menuPoderes.quantidade[0] = 1; 
-    menuPoderes.quantidade[1] = 3;
+    menuPoderes.quantidade[0] = 1 + quantidadeBolhasProtecao; 
+    menuPoderes.quantidade[1] = 3 + quantidadeBolhasAtaque;
     for(let i=0; i<moeda.length; i++){
         moeda[i].y += height;
     }
@@ -438,7 +439,7 @@ let teclasImgStatus = false;
 teclasMostrar.addEventListener("click", ()=>{
     lojaStatus = false;
     loja.style.transform = `translatey(0px)`;
-    let aux = window.innerHeight / 100 * 45 + 8;
+    let aux = window.innerHeight / 100 * 45 + 2;
     if(teclasImgStatus){
         aux = 0;
     };
@@ -452,16 +453,28 @@ teclasMostrar.addEventListener("click", ()=>{
 let lojaBotao = document.querySelector("#lojaBotao");
 let loja = document.querySelector("#loja");
 let lojaStatus = false;
+let lojaVoltar = document.querySelector("#voltarLoja");
 lojaBotao.addEventListener("click", ()=>{
     teclasImgStatus = false;
     teclasImg.style.transform = `translatex(0px)`;
-    let aux = window.innerWidth / 100 * 40 + 4;
+    let aux = window.innerWidth / 100 * 40 + 2;
     if(lojaStatus){
         aux = 0;
     };
     loja.style.transform = `translatey(${-aux}px)`;
     (lojaStatus) ? lojaStatus = false : lojaStatus = true;
 });
+lojaVoltar.addEventListener("click", ()=>{
+    teclasImgStatus = false;
+    teclasImg.style.transform = `translatex(0px)`;
+    let aux = window.innerWidth / 100 * 40 + 2;
+    if(lojaStatus){
+        aux = 0;
+    };
+    loja.style.transform = `translatey(${-aux}px)`;
+    (lojaStatus) ? lojaStatus = false : lojaStatus = true;
+});
+
 
 //Background
 
@@ -579,8 +592,8 @@ let coracao = {
     sy:0,
     sw:160,
     sh:48,
-    x:width - 176,
-    y:16,
+    x:width - 208,
+    y:32,
     w:160,
     h:48,
     frame:0
@@ -725,7 +738,7 @@ function colisao(x, y, w, h, tipo){
 let quantidadePontos = 0;
 let pontos = {
     nx:32,
-    ny:50,
+    ny:64,
     fonte:"49px serif",
 }
 function carregarPontos(){
@@ -766,21 +779,23 @@ function carregarBolha(){
 
 //Poderes
 
+let quantidadeBolhasProtecao = 0;
+let quantidadeBolhasAtaque = 0;
 let menuPoderes = {
     fonte:"40px serif",
     sx:0,
     sy:0,
     sw:144,
     sh:144,
-    x:width-80,
+    x:width-112,
     y:[],
     w:32,
     h:32,
     tipo:0,
     quantidade:[],
 }
-menuPoderes.y[0] = height - 48;
-menuPoderes.y[1] = height - 96;
+menuPoderes.y[0] = height - 64;
+menuPoderes.y[1] = height - 112;
 menuPoderes.quantidade[0] = 1; //bolha
 menuPoderes.quantidade[1] = 3; //tiro
 
@@ -1101,6 +1116,8 @@ function finalizarJogo (){
     menu = true;
     tempoJogo = Date.now();
     nadar = 10;
+    menuPoderes.quantidade[0] = 1 + quantidadeBolhasProtecao; 
+    menuPoderes.quantidade[1] = 3 + quantidadeBolhasAtaque;
     jogo = false;
     vidaStatus = true;
     musicaAberturaSom.play();
