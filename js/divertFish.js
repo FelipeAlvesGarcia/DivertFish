@@ -460,7 +460,12 @@ lojaBotao.addEventListener("click", ()=>{
     let aux = window.innerWidth / 100 * 40 + 2;
     if(lojaStatus){
         aux = 0;
-    };
+    }
+    else{
+        let itensLojaDelete = document.querySelector("#itens");
+        itensLojaDelete.remove();
+        carregarItensLoja();
+    }
     loja.style.transform = `translatey(${-aux}px)`;
     (lojaStatus) ? lojaStatus = false : lojaStatus = true;
 });
@@ -475,6 +480,188 @@ lojaVoltar.addEventListener("click", ()=>{
     (lojaStatus) ? lojaStatus = false : lojaStatus = true;
 });
 
+//Loja
+
+/*let itensLoja = document.querySelector("#itens");
+
+itensLoja.addEventListener('click', () =>{
+    let equipado = document.querySelector(".equipado");
+    let equipar = document.querySelectorAll(".equipar");
+    for(let i=0; i<equipar.length; i++){
+        equipar[i].addEventListener('click', () =>{
+            equipado.querySelector(".statusComprado").querySelector("h4").innerHTML = "Equipar";
+            equipado.classList.add("equipar");
+            equipado.classList.remove("equipado");
+            equipar[i].querySelector(".statusComprado").querySelector("h4").innerHTML = "Equipado";
+            equipar[i].classList.add("equipado");
+            equipar[i].classList.remove("equipar");
+        });        
+    }
+
+    let comprar = document.querySelectorAll(".comprar");
+    for(let i=0; i<comprar.length; i++){
+        comprar[i].addEventListener('click', () =>{
+            comprar[i].querySelector(".statusComprar").querySelector("h4").addEventListener('click', () =>{
+                let valorItem = comprar[i].querySelector(".statusComprar").querySelector("div").querySelector("h4").innerHTML
+                if(comprar[i].querySelector("div").classList.contains("bolhaItem")){
+                    quantidadeMoedaTotal -= valorItem;
+                }
+                else{
+
+                }
+            });
+        });
+    }
+})*/
+
+let itens = [];
+itens[0] = {
+    comprado:true,
+    img:"imgDivertFish/testePeixe.png",
+    preco:0,
+    nome:"Peixe Palhaço",
+    equipado:true,
+    skin:true
+}
+itens[1] = {
+    comprado:true,
+    img:"imgDivertFish/testePeixe.png",
+    preco:0,
+    nome:"Peixe Palhaço",
+    equipado:false,
+    skin:true
+}
+itens[2] = {
+    comprado:false,
+    img:"imgDivertFish/testePeixe.png",
+    preco:50,
+    nome:"Peixe Palhaço",
+    equipado:false,
+    skin:true
+}
+itens[3] = {
+    comprado:false,
+    img:"imgDivertFish/testePeixe.png",
+    preco:110,
+    nome:"Peixe Palhaço",
+    equipado:false,
+    skin:true
+}
+itens[4] = {
+    comprado:false,
+    img:"imgDivertFish/bolha.png",
+    preco:3,
+    nome:"Bolha Mágica",
+    equipado:false,
+    skin:false
+}
+itens[5] = {
+    comprado:false,
+    img:"imgDivertFish/bolha.png",
+    preco:5,
+    nome:"Bolha de Proteção",
+    equipado:false,
+    skin:false
+}
+
+let lojaMain = document.querySelector("#loja");
+function carregarItensLoja (){
+    let itensLoja = document.createElement('div');
+    itensLoja.id = "itens";
+    for(let i=0; i<itens.length; i++){
+        let item = document.createElement('div');
+        item.classList.add("item");
+
+        let h3 = document.createElement('h3');
+        h3.innerHTML = itens[i].nome;
+        item.appendChild(h3);
+
+        let imgItem = document.createElement('img');
+        imgItem.src = itens[i].img;
+        item.appendChild(imgItem);
+
+        let statusItem = document.createElement('div');
+        item.appendChild(statusItem);
+
+        if(itens[i].comprado){
+            statusItem.classList.add("statusComprado");
+            let itemH4 = document.createElement('h4');
+            if(itens[i].equipado){
+                item.classList.add("equipado");
+                itemH4.innerText = "Equipado";
+            }
+            else{
+                item.classList.add("equipar");
+                itemH4.innerText = "Equipar";
+
+                item.addEventListener('click', () =>{
+                    for(let j=0; j<itens.length; j++){
+                        if(itens[j].equipado)
+                            itens[j].equipado = false;
+                    }
+                    itens[i].equipado = true;
+                    
+                    let atualizaLoja = document.querySelector("#itens");
+                    atualizaLoja.remove();
+                    carregarItensLoja();  
+                });
+            }
+            statusItem.appendChild(itemH4);
+        }
+        else{
+            item.classList.add("comprar");
+            statusItem.classList.add("statusComprar");
+
+            let itemBotaoComprar = document.createElement('button');
+            itemBotaoComprar.innerText = "Comprar";
+            itemBotaoComprar.classList.add("botaoComprar");
+            statusItem.appendChild(itemBotaoComprar);
+
+            let itemValor = document.createElement('div');
+            statusItem.appendChild(itemValor);
+            let moedaValor = document.createElement('img');
+            moedaValor.src = "imgDivertFish/moedaTeste.png";
+            itemValor.appendChild(moedaValor);
+            let precoValor = document.createElement('h4');
+            precoValor.innerHTML = itens[i].preco;
+            itemValor.appendChild(precoValor);
+
+            if(itens[i].skin){
+                itemBotaoComprar.addEventListener('click', () =>{
+                    if(quantidadeMoedaTotal >= itens[i].preco){
+                        quantidadeMoedaTotal -= itens[i].preco;
+                        itens[i].comprado = true;
+
+                        let atualizaLoja = document.querySelector("#itens");
+                        atualizaLoja.remove();
+                        carregarItensLoja();    
+                    }
+                });
+            }
+            else{
+                itemBotaoComprar.addEventListener('click', () =>{
+                    if(quantidadeMoedaTotal >= itens[i].preco){
+                        quantidadeMoedaTotal -= itens[i].preco;
+                        if(itens[i].preco == 5){
+                            quantidadeBolhasProtecao += 1;
+                        }
+                        else{
+                            quantidadeBolhasAtaque += 1;
+                        }
+                        menuPoderes.quantidade[0] = 1 + quantidadeBolhasProtecao; 
+                        menuPoderes.quantidade[1] = 3 + quantidadeBolhasAtaque;
+
+                        /*let atualizaLoja = document.querySelector("#itens");
+                        atualizaLoja.remove();
+                        carregarItensLoja();*/
+                    }
+                });
+            }
+        }
+        itensLoja.appendChild(item);
+    }
+    lojaMain.appendChild(itensLoja);
+}
 
 //Background
 
@@ -960,7 +1147,7 @@ function carregarPowerUp (){
 //Moeda
 
 let quantidadeMoeda = 0;
-let quantidadeMoedaTotal = 0;
+let quantidadeMoedaTotal = 300;
 let moeda = [];
 moeda[0] = {sx:96, sy:0, sw:96, sh:96, x:width*(4/3), y:-200, w:48, h:48, frame:0, maxFrame:6}
 moeda[1] = {sx:96, sy:0, sw:96, sh:96, x:width*(5/3), y:-200, w:48, h:48, frame:2, maxFrame:6}

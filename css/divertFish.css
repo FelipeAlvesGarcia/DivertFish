@@ -230,9 +230,8 @@ main{
 #itens{
     margin-left: 5vw;
     margin-right: 5vw;
-}
-.linhaItens{
     display:flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     margin-bottom: 3vw;
 }
@@ -244,6 +243,7 @@ main{
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin-bottom: 3vw;
 }
 .item > h3{
     text-align: center;
@@ -275,7 +275,7 @@ main{
     justify-content: center;
     align-items: center;
 }
-.statusComprar > h4{
+.statusComprar > .botaoComprar{
     font-size: 1vw;
     color:white;
     font-family: arial;
@@ -305,7 +305,7 @@ main{
     font-family: arial;
     margin: 0;
 }
-.statusComprar > h4:hover{
+.statusComprar > .botaoComprar:hover{
     background-color: red;
 }
 .equipado{
