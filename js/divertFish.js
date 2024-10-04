@@ -1204,7 +1204,7 @@ function carregarPowerUp (){
 //Moeda
 
 let quantidadeMoeda = 0;
-let quantidadeMoedaTotal = 300;
+let quantidadeMoedaTotal = 0;
 let moeda = [];
 moeda[0] = {sx:96, sy:0, sw:96, sh:96, x:width*(4/3), y:-200, w:48, h:48, frame:0, maxFrame:6}
 moeda[1] = {sx:96, sy:0, sw:96, sh:96, x:width*(5/3), y:-200, w:48, h:48, frame:2, maxFrame:6}
