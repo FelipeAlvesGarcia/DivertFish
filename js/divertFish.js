@@ -32,6 +32,8 @@ let lixosImg = new Image();
 lixosImg.src = "./imgDivertFish/lixosConjunto.png";
 let bolhasImg = new Image();
 bolhasImg.src = "./imgDivertFish/bolhas.png";
+let bolhaAtaqueImg = new Image();
+bolhaAtaqueImg.src = "./imgDivertFish/bolhaAtaque.png";
 let barreiraVerticalImg = new Image();
 barreiraVerticalImg.src = "imgDivertFish/vertical.png";
 let barreiraHorizontalImg = new Image();
@@ -346,6 +348,18 @@ let peixeMenu = {
 }
 
 function carregarMenu(){
+    if(itens[0].equipado){
+        peixeImg.src = "imgDivertFish/peixe.png";
+    }
+    else if(itens[1].equipado){
+        peixeImg.src = "imgDivertFish/peixe.png";
+    }
+    else if(itens[2].equipado){
+        peixeImg.src = "imgDivertFish/peixe.png";
+    }
+    else{
+        peixeImg.src = "imgDivertFish/tubarao.png";
+    }
     if(peixeMenu.rotation>0){
         ctx.translate(peixeMenu.x + peixeMenu.w/2, peixeMenu.y + peixeMenu.h/2);
         ctx.rotate((peixeMenu.rotation * Math.PI) / 180);
@@ -574,7 +588,7 @@ placarVoltar.addEventListener("click", ()=>{
 let itens = [];
 itens[0] = {
     comprado:true,
-    img:"imgDivertFish/testePeixe.png",
+    img:"imgDivertFish/peixeLoja.png",
     preco:0,
     nome:"Peixe Palhaço",
     equipado:true,
@@ -582,7 +596,7 @@ itens[0] = {
 }
 itens[1] = {
     comprado:true,
-    img:"imgDivertFish/testePeixe.png",
+    img:"imgDivertFish/peixeLoja.png",
     preco:0,
     nome:"Peixe Palhaço",
     equipado:false,
@@ -590,7 +604,7 @@ itens[1] = {
 }
 itens[2] = {
     comprado:false,
-    img:"imgDivertFish/testePeixe.png",
+    img:"imgDivertFish/peixeLoja.png",
     preco:50,
     nome:"Peixe Palhaço",
     equipado:false,
@@ -598,15 +612,15 @@ itens[2] = {
 }
 itens[3] = {
     comprado:false,
-    img:"imgDivertFish/testePeixe.png",
+    img:"imgDivertFish/tubaraoLoja.png",
     preco:110,
-    nome:"Peixe Palhaço",
+    nome:"Tubarão",
     equipado:false,
     skin:true
 }
 itens[4] = {
     comprado:false,
-    img:"imgDivertFish/bolha.png",
+    img:"imgDivertFish/bolhaAtaque.png",
     preco:3,
     nome:"Bolha Mágica",
     equipado:false,
@@ -677,7 +691,7 @@ function carregarItensLoja (){
             let itemValor = document.createElement('div');
             statusItem.appendChild(itemValor);
             let moedaValor = document.createElement('img');
-            moedaValor.src = "imgDivertFish/moedaTeste.png";
+            moedaValor.src = "imgDivertFish/moedaLoja.png";
             itemValor.appendChild(moedaValor);
             let precoValor = document.createElement('h4');
             precoValor.innerHTML = itens[i].preco;
@@ -813,6 +827,18 @@ let peixe = {
 }
 
 function carregarPeixe(){
+    if(itens[0].equipado){
+        peixeImg.src = "imgDivertFish/peixe.png";
+    }
+    else if(itens[1].equipado){
+        peixeImg.src = "imgDivertFish/peixe.png";
+    }
+    else if(itens[2].equipado){
+        peixeImg.src = "imgDivertFish/peixe.png";
+    }
+    else{
+        peixeImg.src = "imgDivertFish/tubarao.png";
+    }
     peixe.sx = 112 * peixe.frame;
     peixeHitbox = {
         x:peixe.x + 8,
@@ -1048,7 +1074,12 @@ function carregarMenuPoderes (){
     ctx.fillStyle = "rgb(255,255,255)";
     for(tipo = 0; tipo < menuPoderes.quantidade.length; tipo++){
         ctx.fillText(menuPoderes.quantidade[tipo], menuPoderes.x+menuPoderes.w+8, menuPoderes.y[tipo]+27);
-        ctx.drawImage(bolhaImg, menuPoderes.sx*menuPoderes.tipo, menuPoderes.sy, menuPoderes.sw, menuPoderes.sh, menuPoderes.x, menuPoderes.y[tipo], menuPoderes.w, menuPoderes.h);
+        if(tipo == 0){
+            ctx.drawImage(bolhaImg, menuPoderes.sx*menuPoderes.tipo, menuPoderes.sy, menuPoderes.sw, menuPoderes.sh, menuPoderes.x, menuPoderes.y[tipo], menuPoderes.w, menuPoderes.h);
+        }
+        else{
+            ctx.drawImage(bolhaAtaqueImg, menuPoderes.sx*menuPoderes.tipo, menuPoderes.sy, menuPoderes.sw, menuPoderes.sh, menuPoderes.x, menuPoderes.y[tipo], menuPoderes.w, menuPoderes.h);
+        }
     }
 }
 
@@ -1091,7 +1122,7 @@ function tiroBolha (){
     if(tiro.x > width){
         tiro.status = false;
     }
-    ctx.drawImage(bolhaImg, tiro.sx, tiro.sy, tiro.sw, tiro.sh, tiro.x, tiro.y, tiro.w, tiro.h);
+    ctx.drawImage(bolhaAtaqueImg, tiro.sx, tiro.sy, tiro.sw, tiro.sh, tiro.x, tiro.y, tiro.w, tiro.h);
 }
 
 let celularBolhaAtaque = document.querySelector("#bolhaAtaque");
@@ -1204,7 +1235,7 @@ function carregarPowerUp (){
 //Moeda
 
 let quantidadeMoeda = 0;
-let quantidadeMoedaTotal = 0;
+let quantidadeMoedaTotal = 300;
 let moeda = [];
 moeda[0] = {sx:96, sy:0, sw:96, sh:96, x:width*(4/3), y:-200, w:48, h:48, frame:0, maxFrame:6}
 moeda[1] = {sx:96, sy:0, sw:96, sh:96, x:width*(5/3), y:-200, w:48, h:48, frame:2, maxFrame:6}
