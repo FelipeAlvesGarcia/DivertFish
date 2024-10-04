@@ -394,12 +394,15 @@ function iniciarJogo(){
     teclasImg.style.transform = `translatex(0px)`;
     lojaStatus = false;
     loja.style.transform = `translatey(0px)`;
+    placarStatus = false;
+    placar.style.transform = `translatey(0px)`;
     ctxJ.clearRect(0, 0, widthJ, heightJ);
     
     ajusteTela();
     tela = true;   
     opcoesMenu.style.display = "none";
     menu = false;
+    vidaStatus = true;
     musicaAberturaSom.pause();
     musica1Som.play();
     keys.d.pressed = false;
@@ -480,39 +483,93 @@ lojaVoltar.addEventListener("click", ()=>{
     (lojaStatus) ? lojaStatus = false : lojaStatus = true;
 });
 
+//
+
+let placar = document.querySelector("#placar");
+let placarTabela = document.querySelector("#tabela");
+let placarLideres = [];
+function carregarPlacarLideres(){
+    let placarBody = document.createElement('tbody');
+    placarBody.id = "placarBody";
+    let contPlacar;
+    for(contPlacar = 1;contPlacar <=100; contPlacar++){
+        if(placarLideres[contPlacar] == undefined){
+            placarLideres[contPlacar] = {
+                nome: "",
+                pontuacao: 0,
+                moedas: 0,
+                rank: contPlacar
+            }
+        }
+    }
+    for(contPlacar = 1;contPlacar <=100; contPlacar++){
+        for(let testePlacar = 1; testePlacar <contPlacar; testePlacar++){
+            if(placarLideres[testePlacar].pontuacao < placarLideres[contPlacar].pontuacao){
+                let auxNome = placarLideres[contPlacar].nome;
+                let auxPontuacao = placarLideres[contPlacar].pontuacao;
+                let auxMoedas = placarLideres[contPlacar].moedas;
+
+                placarLideres[contPlacar].nome = placarLideres[testePlacar].nome;
+                placarLideres[contPlacar].pontuacao = placarLideres[testePlacar].pontuacao;
+                placarLideres[contPlacar].moedas = placarLideres[testePlacar].moedas;
+
+                placarLideres[testePlacar].nome = auxNome;
+                placarLideres[testePlacar].pontuacao = auxPontuacao;
+                placarLideres[testePlacar].moedas = auxMoedas;
+                
+            }
+        }
+    }
+    for(contPlacar = 1;contPlacar <=100; contPlacar++){
+        let tr = document.createElement('tr');
+        let tdRank = document.createElement('td');
+        let tdNome = document.createElement('td');
+        let tdPontos = document.createElement('td');
+        let tdMoedas = document.createElement('td');
+        tdRank.innerHTML = placarLideres[contPlacar].rank;
+        tdNome.innerHTML = placarLideres[contPlacar].nome;
+        tdPontos.innerHTML = placarLideres[contPlacar].pontuacao;
+        tdMoedas.innerHTML = placarLideres[contPlacar].moedas;
+        tr.appendChild(tdRank);
+        tr.appendChild(tdNome);
+        tr.appendChild(tdPontos);
+        tr.appendChild(tdMoedas);
+        placarBody.appendChild(tr);
+    }  
+    placarTabela.appendChild(placarBody);  
+}carregarPlacarLideres();
+
+let placarBotao = document.querySelector("#placarBotao");
+let placarVoltar = document.querySelector("#placarVoltar");
+let placarStatus = false;
+placarBotao.addEventListener("click", ()=>{
+    teclasImgStatus = false;
+    teclasImg.style.transform = `translatex(0px)`;
+    let aux = window.innerWidth / 100 * 40 + 2;
+    if(placarStatus){
+        aux = 0;
+    }
+    else{
+        let placarDelete = document.querySelector("#placarBody");
+        placarDelete.remove();
+        carregarPlacarLideres();
+    }
+    placar.style.transform = `translatey(${-aux}px)`;
+    (placarStatus) ? placarStatus = false : placarStatus = true;
+});
+placarVoltar.addEventListener("click", ()=>{
+    teclasImgStatus = false;
+    teclasImg.style.transform = `translatex(0px)`;
+    let aux = window.innerWidth / 100 * 40 + 2;
+    if(placarStatus){
+        aux = 0;
+    };
+    placar.style.transform = `translatey(${-aux}px)`;
+    (placarStatus) ? placarStatus = false : placarStatus = true;
+});
+
+
 //Loja
-
-/*let itensLoja = document.querySelector("#itens");
-
-itensLoja.addEventListener('click', () =>{
-    let equipado = document.querySelector(".equipado");
-    let equipar = document.querySelectorAll(".equipar");
-    for(let i=0; i<equipar.length; i++){
-        equipar[i].addEventListener('click', () =>{
-            equipado.querySelector(".statusComprado").querySelector("h4").innerHTML = "Equipar";
-            equipado.classList.add("equipar");
-            equipado.classList.remove("equipado");
-            equipar[i].querySelector(".statusComprado").querySelector("h4").innerHTML = "Equipado";
-            equipar[i].classList.add("equipado");
-            equipar[i].classList.remove("equipar");
-        });        
-    }
-
-    let comprar = document.querySelectorAll(".comprar");
-    for(let i=0; i<comprar.length; i++){
-        comprar[i].addEventListener('click', () =>{
-            comprar[i].querySelector(".statusComprar").querySelector("h4").addEventListener('click', () =>{
-                let valorItem = comprar[i].querySelector(".statusComprar").querySelector("div").querySelector("h4").innerHTML
-                if(comprar[i].querySelector("div").classList.contains("bolhaItem")){
-                    quantidadeMoedaTotal -= valorItem;
-                }
-                else{
-
-                }
-            });
-        });
-    }
-})*/
 
 let itens = [];
 itens[0] = {
@@ -714,7 +771,7 @@ function carregarChao (){
             if(chao[i].x < -chao[i+1].w){
                 chao[i].x = chao[i+1].x+chao[i].w-chao[i].variacao+(nadar-10);
             }
-            else if(vidaStatus){
+            else if(vidaStatus || menu){
                 chao[i].x -= chao[i].variacao+(nadar-10);
             }
         }
@@ -722,7 +779,7 @@ function carregarChao (){
             if(chao[i].x < -chao[i-1].w){
                 chao[i].x = chao[i-1].x+chao[i].w;
             }
-            else if(vidaStatus){
+            else if(vidaStatus || menu){
                 chao[i].x -= chao[i].variacao+(nadar-10);
             }
         }
@@ -1298,6 +1355,7 @@ function corretaVida (){
 }
 
 function finalizarJogo (){
+    console.log("Voltar")
     pergunta.style.display = "none";
     opcoesMenu.style.display = "block";
     menu = true;
@@ -1306,7 +1364,7 @@ function finalizarJogo (){
     menuPoderes.quantidade[0] = 1 + quantidadeBolhasProtecao; 
     menuPoderes.quantidade[1] = 3 + quantidadeBolhasAtaque;
     jogo = false;
-    vidaStatus = true;
+    vidaStatus = false;
     musicaAberturaSom.play();
     loopMenu();
 }
@@ -1315,14 +1373,47 @@ let result = document.querySelector("#gameoverResult");
 let jogarNovamente = document.querySelector("#jogarNovamente");
 let voltarHome = document.querySelector("#voltarHome");
 let pontosResult = document.querySelector("#pontosResult");
+let pontosTotalResult = document.querySelector("#pontosTotalResult");
+let lixeiraCorreta = document.querySelector("#lixeiraCorreta");
 let moedasResult = document.querySelector("#moedasResult");
-function resultados (){
-    pontosResult.innerHTML = "Sua pontuação: " + Math.round(quantidadePontos);
+function resultados (alterCorreta){
+    let pontuacaoTotal;
+    if(alterCorreta){
+        lixeiraCorreta.innerHTML = "Descarte do lixo: Correto (+ " + Math.round(quantidadePontos/10) + " pontos)";
+        pontuacaoTotal = Math.round(quantidadePontos) + Math.round(quantidadePontos/10);
+    }
+    else{
+        lixeiraCorreta.innerHTML = "Descarte do lixo: Incorreto (+ 0 pontos)";
+        pontuacaoTotal = Math.round(quantidadePontos);
+    }
+        
+    pontosResult.innerHTML = "Pontuação: " + Math.round(quantidadePontos);
+    pontosTotalResult.innerHTML = "Pontuação Total: " + pontuacaoTotal;
     moedasResult.innerHTML = "Moedas pegas: " + quantidadeMoeda;
     quantidadeMoedaTotal += quantidadeMoeda;
-    quantidadeMoeda = 0;
     pergunta.style.display = "none";
     result.style.display = "flex";
+
+    for(let n=100; n>0; n--){
+        if(pontuacaoTotal >= placarLideres[n].pontuacao){
+            if(n < 100){
+                for(let m=n; m<100; m++){
+                    placarLideres[m].pontuacao = placar[m-1].pontuacao;
+                    placarLideres[m].nome = placar[m-1].nome;
+                    placarLideres[m].moedas = placar[m-1].moedas;
+                }
+            }
+            placarLideres[n].pontuacao = pontuacaoTotal;
+            placarLideres[n].nome = "teste"+n;  
+            placarLideres[n].moedas = quantidadeMoeda;
+            console.log(quantidadeMoeda)
+            break;
+        }
+    }
+    quantidadeMoeda = 0;
+    let placarDelete = document.querySelector("#placarBody");
+    placarDelete.remove();
+    carregarPlacarLideres();
 }
 
 jogarNovamente.addEventListener("click", ()=>{
@@ -1345,7 +1436,7 @@ alterA.addEventListener("click", ()=>{
         chance = corretaVida();
     }
     else{
-        resultados();
+        resultados(alternativas.a);
     }
 });
 
@@ -1354,7 +1445,7 @@ alterB.addEventListener("click", ()=>{
         chance = corretaVida();
     }
     else{
-        resultados();
+        resultados(alternativas.b);
     }
 });
 
@@ -1363,7 +1454,7 @@ alterC.addEventListener("click", ()=>{
         chance = corretaVida();
     }
     else{
-        resultados();
+        resultados(alternativas.c);
     }
 });
 
@@ -1372,7 +1463,7 @@ alterD.addEventListener("click", ()=>{
         chance = corretaVida();
     }
     else{
-        resultados();
+        resultados(alternativas.d);
     }
 });
 
@@ -1381,7 +1472,7 @@ alterE.addEventListener("click", ()=>{
         chance = corretaVida();
     }
     else{
-        resultados();
+        resultados(alternativas.e);
     }
 });
 

@@ -43,7 +43,7 @@
                 <div class="linha">
                     <div class="bgOpcao diferencaOpcao">
                         <img src="imgDivertFish/bolha.png" alt="">
-                        <div class="opcao"><img src="imgDivertFish/placar.png" alt=""></div>
+                        <div id="placarBotao" class="opcao"><img src="imgDivertFish/placar.png" alt=""></div>
                     </div>
                     <div class="bgOpcaoPrincipal">
                         <img src="imgDivertFish/bolha.png" alt="">
@@ -64,6 +64,33 @@
                         <div id="teclas" class="opcao"><img src="imgDivertFish/outroJogo.png" alt=""></div>
                     </div>
                 </div>
+            </div>
+
+            <div id="placar">
+                <img src="imgDivertFish/bolha.png" alt="" id="placarVoltar">
+                <h2>Placar de Líderes</h2>
+                <div id="scroll">
+                    <table id="tabela">
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Nome</th>
+                                <th>Pontos</th>
+                                <th>Moedas</th>
+                            </tr>    
+                        </thead>
+                        <!--<tbody id="placarBody">
+                            <tr>
+                                <td>1</td>
+                                <td>Felipe</td>
+                                <td>3097</td>
+                                <td>41</td>
+                            </tr>  
+                        </tbody>-->
+                        
+                    </table>    
+                </div>
+                
             </div>
 
             <img src="imgDivertFish/teclas.png" alt="" id="teclasImg">
@@ -163,7 +190,9 @@
             <div id="gameoverResult">
                 <div id="resultado">
                     <h2>RESULTADOS</h2>
-                    <h3 id="pontosResult">Sua Pontuação: 0</h3>
+                    <h3 id="lixeiraCorreta">Descarte do Lixo: Correto (+ 0 pontos)</h3>
+                    <h3 id="pontosResult">Pontuação: 0</h3>
+                    <h3 id="pontosTotalResult">Pontuação Total: 0</h3>
                     <h3 id="moedasResult">Moedas Pegas: 0</h3>
                     <div id="reJogar">
                         <p id="jogarNovamente">Jogar</p>
