@@ -352,7 +352,7 @@ function carregarMenu(){
         peixeImg.src = "imgDivertFish/peixe.png";
     }
     else if(itens[1].equipado){
-        peixeImg.src = "imgDivertFish/peixe.png";
+        peixeImg.src = "imgDivertFish/peixeDourado.png";
     }
     else if(itens[2].equipado){
         peixeImg.src = "imgDivertFish/peixe.png";
@@ -431,7 +431,7 @@ function iniciarJogo(){
     primeirasBarreiras();
     quantidadePontos = 0;
     menuPoderes.quantidade[0] = 1 + quantidadeBolhasProtecao; 
-    menuPoderes.quantidade[1] = 3 + quantidadeBolhasAtaque;
+    menuPoderes.quantidade[1] = 1 + quantidadeBolhasAtaque;
     for(let i=0; i<moeda.length; i++){
         moeda[i].y += height;
     }
@@ -595,17 +595,17 @@ itens[0] = {
     skin:true
 }
 itens[1] = {
-    comprado:true,
-    img:"imgDivertFish/peixeLoja.png",
-    preco:0,
-    nome:"Peixe Palhaço",
+    comprado:false,
+    img:"imgDivertFish/peixeDouradoLoja.png",
+    preco:70,
+    nome:"Peixe Dourado",
     equipado:false,
     skin:true
 }
 itens[2] = {
     comprado:false,
     img:"imgDivertFish/peixeLoja.png",
-    preco:50,
+    preco:120,
     nome:"Peixe Palhaço",
     equipado:false,
     skin:true
@@ -613,7 +613,7 @@ itens[2] = {
 itens[3] = {
     comprado:false,
     img:"imgDivertFish/tubaraoLoja.png",
-    preco:110,
+    preco:190,
     nome:"Tubarão",
     equipado:false,
     skin:true
@@ -621,7 +621,7 @@ itens[3] = {
 itens[4] = {
     comprado:false,
     img:"imgDivertFish/bolhaAtaque.png",
-    preco:3,
+    preco:9,
     nome:"Bolha Mágica",
     equipado:false,
     skin:false
@@ -629,7 +629,7 @@ itens[4] = {
 itens[5] = {
     comprado:false,
     img:"imgDivertFish/bolha.png",
-    preco:5,
+    preco:15,
     nome:"Bolha de Proteção",
     equipado:false,
     skin:false
@@ -713,14 +713,14 @@ function carregarItensLoja (){
                 itemBotaoComprar.addEventListener('click', () =>{
                     if(quantidadeMoedaTotal >= itens[i].preco){
                         quantidadeMoedaTotal -= itens[i].preco;
-                        if(itens[i].preco == 5){
+                        if(itens[i].preco == 15){
                             quantidadeBolhasProtecao += 1;
                         }
                         else{
                             quantidadeBolhasAtaque += 1;
                         }
                         menuPoderes.quantidade[0] = 1 + quantidadeBolhasProtecao; 
-                        menuPoderes.quantidade[1] = 3 + quantidadeBolhasAtaque;
+                        menuPoderes.quantidade[1] = 1 + quantidadeBolhasAtaque;
 
                         /*let atualizaLoja = document.querySelector("#itens");
                         atualizaLoja.remove();
@@ -831,7 +831,7 @@ function carregarPeixe(){
         peixeImg.src = "imgDivertFish/peixe.png";
     }
     else if(itens[1].equipado){
-        peixeImg.src = "imgDivertFish/peixe.png";
+        peixeImg.src = "imgDivertFish/peixeDourado.png";
     }
     else if(itens[2].equipado){
         peixeImg.src = "imgDivertFish/peixe.png";
@@ -1067,7 +1067,7 @@ let menuPoderes = {
 menuPoderes.y[0] = height - 64;
 menuPoderes.y[1] = height - 112;
 menuPoderes.quantidade[0] = 1; //bolha
-menuPoderes.quantidade[1] = 3; //tiro
+menuPoderes.quantidade[1] = 1; //tiro
 
 function carregarMenuPoderes (){
     ctx.font = menuPoderes.fonte;
@@ -1090,6 +1090,9 @@ celularBolhaProtecao.addEventListener("click", ()=>{
         bolha.tempo = Date.now();
         bolha.status = true;
         menuPoderes.quantidade[0]--;
+        if(quantidadeBolhasProtecao > 0){
+            quantidadeBolhasProtecao--;
+        }
     }
 });
 
@@ -1098,6 +1101,9 @@ window.addEventListener("keydown", (evt)=>{
         bolha.tempo = Date.now();
         bolha.status = true;
         menuPoderes.quantidade[0]--;
+        if(quantidadeBolhasProtecao > 0){
+            quantidadeBolhasProtecao--;
+        }
     }
 });
 
@@ -1129,6 +1135,9 @@ let celularBolhaAtaque = document.querySelector("#bolhaAtaque");
 celularBolhaAtaque.addEventListener("click", ()=>{
     if(!tiro.status && menuPoderes.quantidade[1] > 0){
         menuPoderes.quantidade[1]--;
+        if(quantidadeBolhasAtaque > 0){
+            quantidadeBolhasAtaque --;
+        }
         tiro.x = peixeHitbox.x+peixeHitbox.w;
         tiro.y = peixeHitbox.y+((peixeHitbox.h-tiro.h)/2);
         tiro.status = true;
@@ -1138,6 +1147,9 @@ celularBolhaAtaque.addEventListener("click", ()=>{
 window.addEventListener("keydown", (evt)=>{
     if(!tiro.status && evt.key == 'v' && menuPoderes.quantidade[1] > 0){
         menuPoderes.quantidade[1]--;
+        if(quantidadeBolhasAtaque > 0){
+            quantidadeBolhasAtaque --;
+        }
         tiro.x = peixeHitbox.x+peixeHitbox.w;
         tiro.y = peixeHitbox.y+((peixeHitbox.h-tiro.h)/2);
         tiro.status = true;
@@ -1393,7 +1405,7 @@ function finalizarJogo (){
     tempoJogo = Date.now();
     nadar = 10;
     menuPoderes.quantidade[0] = 1 + quantidadeBolhasProtecao; 
-    menuPoderes.quantidade[1] = 3 + quantidadeBolhasAtaque;
+    menuPoderes.quantidade[1] = 1 + quantidadeBolhasAtaque;
     jogo = false;
     vidaStatus = false;
     musicaAberturaSom.play();
