@@ -1365,7 +1365,6 @@ function gameOver (){
 }
 
 function gameOverCarregar(){
-    console.log("Game Over");
     musica1Som.pause();
     carregarBackground();
     carregarChao();
@@ -1394,6 +1393,7 @@ function corretaVida (){
         barreiras[i].y = -height;
     }
     pergunta.style.display = "none"; 
+    poderesBotao.style.display = "flex";
     return false;
 }
 
