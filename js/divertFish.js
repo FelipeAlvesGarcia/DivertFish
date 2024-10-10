@@ -224,7 +224,15 @@ let hitbox = false;
 let tempoJogo = Date.now();
 let vidaStatus = true;
 let jogo = false;
+
+let lastTime = Date.now();
+
 function loopGame(){
+    // Calcular o tempo decorrido entre os frames
+    let deltaTime = Date.now() - lastTime;
+    lastTime = Date.now();
+    console.log(deltaTime); 
+
     if(Date.now() - tempoJogo >= (1000/60)){
         if(vidaStatus){
             ctx.clearRect(0, 0, width, height)
