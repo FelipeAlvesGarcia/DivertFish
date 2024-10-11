@@ -1401,7 +1401,7 @@ function corretaVida (){
         barreiras[i].y = -height;
     }
     pergunta.style.display = "none"; 
-    poderesBotao.style.display = "flex";
+    ajusteTela();
     return false;
 }
 
