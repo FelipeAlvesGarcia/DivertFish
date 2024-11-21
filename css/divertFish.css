@@ -5,6 +5,7 @@
 body{
     /*background-color: rgb(22, 22, 22);**/
     background-color: #5917E9;
+    background-color: rgb(39, 39, 39);
 }
 main{
     position:relative;
@@ -19,9 +20,7 @@ main{
 #tela{
     width:90vw;
     /*margin-left:calc((100vw - (98vmin*(2/3)))/2);*/
-    border:5px solid white;
     background-color: black;
-    border-radius: 25px;
 }
 #botaoComecar{
     position: absolute;

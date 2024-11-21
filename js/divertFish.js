@@ -164,7 +164,7 @@ function direcaoCelular(){
 }
 
 //teclas
-
+git 
 let keys = {
     w:{
         pressed:false,
@@ -231,7 +231,7 @@ function loopGame(){
     // Calcular o tempo decorrido entre os frames
     let deltaTime = Date.now() - lastTime;
     lastTime = Date.now();
-    console.log(deltaTime); 
+    //console.log(deltaTime); 
 
     if(Date.now() - tempoJogo >= (1000/60)){
         if(vidaStatus){
@@ -1295,7 +1295,7 @@ function colisaoMoeda(x, y, w, h){
             }
             moeda[i].y = -200;
             quantidadeMoeda++;
-            console.log("MOEDAS = "+quantidadeMoeda);
+            //console.log("MOEDAS = "+quantidadeMoeda);
         }
     }
 }
@@ -1321,15 +1321,37 @@ function carregarMenuMoeda (){
 }
 
 //tela
+function isMobile() {
+    const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+    
+    // Verifica se há palavras-chave específicas de dispositivos móveis
+    if (/android/i.test(userAgent)) {
+        return true; // Android
+    }
+    if (/iPhone|iPad|iPod/i.test(userAgent)) {
+        return true; // iOS
+    }
+    if (/windows phone/i.test(userAgent)) {
+        return true; // Windows Phone
+    }
+    
+    return false; // Não é móvel
+}
 
 let poderesBotao = document.querySelector("#poderes");
 function ajusteTela (){
     /*if(screen.orientation.type == "portrait-primary" || screen.orientation.type == "portrait-secondary"){
         screen.orientation.lock("landscape-primary");
     }*/
-    if(window.innerWidth < 1100){
+    if (isMobile()) {
+        console.log("Acesso por dispositivo móvel");
         poderesBotao.style.display = "flex";
         joystickStatus = true;
+    } else {
+        console.log("Acesso por desktop ou outro dispositivo");
+    }
+    if(window.innerWidth < 1100){
+        
     }
     divMain.requestFullscreen();
 }
@@ -1406,7 +1428,7 @@ function corretaVida (){
 }
 
 function finalizarJogo (){
-    console.log("Voltar")
+    //console.log("Voltar")
     pergunta.style.display = "none";
     opcoesMenu.style.display = "block";
     menu = true;
@@ -1457,7 +1479,7 @@ function resultados (alterCorreta){
             placarLideres[n].pontuacao = pontuacaoTotal;
             placarLideres[n].nome = "teste"+n;  
             placarLideres[n].moedas = quantidadeMoeda;
-            console.log(quantidadeMoeda)
+            //console.log(quantidadeMoeda)
             break;
         }
     }
