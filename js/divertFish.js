@@ -506,25 +506,39 @@ lojaVoltar.addEventListener("click", ()=>{
 
 //
 
+let placarLideres = [];
+function pullPlacar (){
+    placarLideres = localStorage.getItem("placarLideres");
+    placarLideres = JSON.parse(placarLideres);
+    console.log(placarLideres);
+    if(!placarLideres){
+        placarLideres = []
+        carregarPlacarLideres();
+    }   
+}
+
+function pushPlacar (){
+    localStorage.setItem("placarLideres", JSON.stringify(placarLideres));
+}
+
 let placar = document.querySelector("#placar");
 let placarTabela = document.querySelector("#tabela");
-let placarLideres = [];
 function carregarPlacarLideres(){
     let placarBody = document.createElement('tbody');
     placarBody.id = "placarBody";
     let contPlacar;
-    for(contPlacar = 1;contPlacar <=100; contPlacar++){
+    for(contPlacar = 0;contPlacar <100; contPlacar++){
         if(placarLideres[contPlacar] == undefined){
             placarLideres[contPlacar] = {
                 nome: "",
                 pontuacao: 0,
                 moedas: 0,
-                rank: contPlacar
+                rank: contPlacar + 1
             }
         }
     }
-    for(contPlacar = 1;contPlacar <=100; contPlacar++){
-        for(let testePlacar = 1; testePlacar <contPlacar; testePlacar++){
+    for(contPlacar = 0;contPlacar <100; contPlacar++){
+        for(let testePlacar = 0; testePlacar <contPlacar; testePlacar++){
             if(placarLideres[testePlacar].pontuacao < placarLideres[contPlacar].pontuacao){
                 let auxNome = placarLideres[contPlacar].nome;
                 let auxPontuacao = placarLideres[contPlacar].pontuacao;
@@ -541,7 +555,7 @@ function carregarPlacarLideres(){
             }
         }
     }
-    for(contPlacar = 1;contPlacar <=100; contPlacar++){
+    for(contPlacar = 0;contPlacar <100; contPlacar++){
         let tr = document.createElement('tr');
         let tdRank = document.createElement('td');
         let tdNome = document.createElement('td');
@@ -589,7 +603,7 @@ placarVoltar.addEventListener("click", ()=>{
     (placarStatus) ? placarStatus = false : placarStatus = true;
 });
 
-
+pullPlacar();
 //Loja
 
 let itens = [];
@@ -1466,17 +1480,28 @@ function resultados (alterCorreta){
     pergunta.style.display = "none";
     result.style.display = "flex";
 
-    for(let n=100; n>0; n--){
+    for(let n=99; n>=0; n--){
         if(pontuacaoTotal >= placarLideres[n].pontuacao){
-            if(n < 100){
-                for(let m=n; m<100; m++){
+            if(n < 99){
+                for(let m=n; m<99; m++){
                     placarLideres[m].pontuacao = placar[m-1].pontuacao;
                     placarLideres[m].nome = placar[m-1].nome;
                     placarLideres[m].moedas = placar[m-1].moedas;
                 }
             }
             placarLideres[n].pontuacao = pontuacaoTotal;
-            placarLideres[n].nome = "teste"+n;  
+            if(itens[0].equipado){
+                placarLideres[n].nome = "Peixe Palhaço";
+            }
+            else if(itens[1].equipado){
+                placarLideres[n].nome = "Peixe Dourado";
+            }
+            else if(itens[2].equipado){
+                placarLideres[n].nome = "Tartaruga";
+            }
+            else{
+                placarLideres[n].nome = "Tubarão";
+            }
             placarLideres[n].moedas = quantidadeMoeda;
             //console.log(quantidadeMoeda)
             break;
@@ -1486,6 +1511,7 @@ function resultados (alterCorreta){
     let placarDelete = document.querySelector("#placarBody");
     placarDelete.remove();
     carregarPlacarLideres();
+    pushPlacar();
 }
 
 jogarNovamente.addEventListener("click", ()=>{
