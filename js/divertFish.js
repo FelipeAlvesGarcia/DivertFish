@@ -723,6 +723,7 @@ function carregarItensLoja (){
                     if(quantidadeMoedaTotal >= itens[i].preco){
                         quantidadeMoedaTotal -= itens[i].preco;
                         itens[i].comprado = true;
+                        pushMoedas();
 
                         let atualizaLoja = document.querySelector("#itens");
                         atualizaLoja.remove();
@@ -740,6 +741,7 @@ function carregarItensLoja (){
                         else{
                             quantidadeBolhasAtaque += 1;
                         }
+                        pushMoedas();
                         menuPoderes.quantidade[0] = 1 + quantidadeBolhasProtecao; 
                         menuPoderes.quantidade[1] = 1 + quantidadeBolhasAtaque;
 
@@ -1267,8 +1269,22 @@ function carregarPowerUp (){
 
 //Moeda
 
-let quantidadeMoeda = 0;
 let quantidadeMoedaTotal = 0;
+function pullMoedas (){
+    quantidadeMoedaTotal = localStorage.getItem("quantidadeMoedaTotal");
+    quantidadeMoedaTotal = JSON.parse(quantidadeMoedaTotal);
+    if(quantidadeMoedaTotal == null){
+        quantidadeMoedaTotal = 0;
+    }
+}
+
+function pushMoedas (){
+    localStorage.setItem("quantidadeMoedaTotal", JSON.stringify(quantidadeMoedaTotal));
+}
+
+pullMoedas();
+
+let quantidadeMoeda = 0;
 let moeda = [];
 moeda[0] = {sx:96, sy:0, sw:96, sh:96, x:width*(4/3), y:-200, w:48, h:48, frame:0, maxFrame:6}
 moeda[1] = {sx:96, sy:0, sw:96, sh:96, x:width*(5/3), y:-200, w:48, h:48, frame:2, maxFrame:6}
@@ -1512,6 +1528,7 @@ function resultados (alterCorreta){
     placarDelete.remove();
     carregarPlacarLideres();
     pushPlacar();
+    pushMoedas();
 }
 
 jogarNovamente.addEventListener("click", ()=>{
