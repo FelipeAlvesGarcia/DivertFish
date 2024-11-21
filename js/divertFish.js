@@ -164,7 +164,6 @@ function direcaoCelular(){
 }
 
 //teclas
-git 
 let keys = {
     w:{
         pressed:false,
